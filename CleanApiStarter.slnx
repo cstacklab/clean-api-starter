@@ -1,0 +1,28 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".config/dotnet-tools.json" />
+    <File Path=".editorconfig" />
+    <File Path=".gitignore" />
+    <File Path="docker-compose.yml" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+    <File Path="global.json" />
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/database/migrations/">
+    <File Path="database/migrations/V001__create_words_table.sql" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/CleanApiStarter.Api/CleanApiStarter.Api.csproj" />
+    <Project Path="src/CleanApiStarter.Application/CleanApiStarter.Application.csproj" />
+    <Project Path="src/CleanApiStarter.Domain/CleanApiStarter.Domain.csproj" />
+    <Project Path="src/CleanApiStarter.Infrastructure/CleanApiStarter.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/src/Common/">
+    <Project Path="src/CleanApiStarter.AppHost/CleanApiStarter.AppHost.csproj" />
+    <Project Path="src/CleanApiStarter.AspNetCore/CleanApiStarter.AspNetCore.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/CleanApiStarter.UnitTests/CleanApiStarter.UnitTests.csproj" />
+  </Folder>
+</Solution>
