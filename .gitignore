@@ -132,6 +132,10 @@ _ReSharper*/
 *.[Rr]e[Ss]harper
 *.DotSettings.user
 
+# JetBrains IDE and Junie local assistant files
+.idea/
+.junie/
+
 # TeamCity is a build add-in
 _TeamCity*
 
