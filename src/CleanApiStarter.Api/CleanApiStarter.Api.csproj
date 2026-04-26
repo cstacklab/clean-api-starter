@@ -3,6 +3,7 @@
   <PropertyGroup>
     <RootNamespace>CleanApiStarter.Api</RootNamespace>
     <AssemblyName>CleanApiStarter.Api</AssemblyName>
+    <UserSecretsId>clean-api-starter</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

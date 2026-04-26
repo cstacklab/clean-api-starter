@@ -4,7 +4,31 @@ A Clean Architecture API starter template for .NET, Aspire, PostgreSQL, and Open
 
 The API uses Minimal APIs with endpoint group classes. `CleanApiStarter.AspNetCore` discovers endpoint groups from the API assembly so `Program.cs` stays small while routes remain easy to find.
 
-API versions are selected with the required `X-Api-Version` request header. Endpoint groups live under version folders such as `Endpoints/V1` and `Endpoints/V2`.
+API versions are selected with the optional `X-Api-Version` request header. Requests without a version use v1 by default. Endpoint groups live under version folders such as `Endpoints/V1` and `Endpoints/V2`.
+
+## Authentication
+
+The API validates Google ID tokens and issues its own JWT access token. Google proves the user identity; ASP.NET Core Identity stores local users, roles, and external logins.
+
+Set the Google client id with user-secrets:
+
+```bash
+dotnet user-secrets set "Authentication:Google:ClientId" "<google-client-id>" --project src/CleanApiStarter.Api/CleanApiStarter.Api.csproj
+```
+
+For local testing, open the development-only helper page:
+
+```text
+https://localhost:7285/auth/google-login
+```
+
+After signing in with Google, the page calls `POST /api/auth/google` and shows the API JWT. Use that JWT with protected endpoints:
+
+```http
+Authorization: Bearer <api-jwt>
+```
+
+New Google users are created as local Identity users and assigned the `User` role by default. The database init scripts create the `User` and `Admin` roles.
 
 ## Learn OpenTelemetry with .NET Aspire
 
@@ -34,7 +58,7 @@ Database scripts live in `database`. Aspire and Docker Compose copy `database/mi
 After the dashboard is running, send requests to the API through Scalar or another HTTP client. In the Aspire dashboard:
 
 - Logs show structured application and framework log entries. The word use cases emit fields such as `WordId`, `SynonymCount`, `WordCount`, and `UpdateSucceeded`.
-- Request logs show method, path, response status code, and duration without logging request or response bodies. `CleanApiStarter.AspNetCore` keeps the `Microsoft.AspNetCore.HttpLogging` category at `Information` even when broader ASP.NET Core logs are filtered to `Warning`.
+- Request logs show method, path, response status code, duration, and `UserId` without logging request or response bodies. `CleanApiStarter.AspNetCore` keeps the `Microsoft.AspNetCore.HttpLogging` category at `Information` even when broader ASP.NET Core logs are filtered to `Warning`.
 - Traces show incoming HTTP requests and PostgreSQL commands from Npgsql.
 - Metrics show ASP.NET Core, HTTP client, and .NET runtime measurements.
 - `/version` exposes the running application version.

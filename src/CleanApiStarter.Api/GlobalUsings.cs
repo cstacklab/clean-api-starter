@@ -1,10 +1,15 @@
 // Global using directives
 
 global using System.Reflection;
+global using System.Security.Claims;
+global using System.Text.Encodings.Web;
 
+global using CleanApiStarter.Api.Endpoints;
+global using CleanApiStarter.Api.Services;
 global using CleanApiStarter.Application;
-global using CleanApiStarter.Application.Interfaces;
-global using CleanApiStarter.Application.Models;
+global using CleanApiStarter.Application.Common.Interfaces;
+global using CleanApiStarter.Application.Features.Auth;
+global using CleanApiStarter.Application.Features.Words;
 global using CleanApiStarter.AspNetCore;
 global using CleanApiStarter.Configuration;
 global using CleanApiStarter.Infrastructure;
