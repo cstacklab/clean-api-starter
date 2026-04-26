@@ -21,6 +21,7 @@
   <Folder Name="/src/Common/">
     <Project Path="src/CleanApiStarter.AppHost/CleanApiStarter.AppHost.csproj" />
     <Project Path="src/CleanApiStarter.AspNetCore/CleanApiStarter.AspNetCore.csproj" />
+    <Project Path="src/CleanApiStarter.Configuration/CleanApiStarter.Configuration.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/CleanApiStarter.UnitTests/CleanApiStarter.UnitTests.csproj" />

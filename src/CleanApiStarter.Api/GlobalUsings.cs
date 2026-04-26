@@ -1,10 +1,12 @@
 // Global using directives
 
-global using CleanApiStarter.Api.Endpoints;
+global using System.Reflection;
+
 global using CleanApiStarter.Application;
 global using CleanApiStarter.Application.Interfaces;
 global using CleanApiStarter.Application.Models;
 global using CleanApiStarter.AspNetCore;
+global using CleanApiStarter.Configuration;
 global using CleanApiStarter.Infrastructure;
 
 global using Microsoft.AspNetCore.Http;
