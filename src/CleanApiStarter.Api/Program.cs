@@ -5,8 +5,9 @@ builder.AddAspNetCoreDefaults();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddOpenApi();
 
+builder.Services.AddAppSettings(builder.Configuration);
 builder.Services.AddApplication();
-builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddInfrastructure();
 
 WebApplication app = builder.Build();
 
@@ -19,7 +20,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseAspNetCoreDefaults();
 app.UseHttpsRedirection();
-app.MapWordEndpoints();
+app.MapEndpoints(Assembly.GetExecutingAssembly());
 app.MapDefaultEndpoints();
 
 app.Run();

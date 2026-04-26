@@ -1,28 +1,27 @@
-namespace CleanApiStarter.Api.Endpoints;
+namespace CleanApiStarter.Api.Endpoints.V1;
 
-public static class WordEndpoints
+public sealed class Words : IEndpointGroup
 {
-    public static IEndpointRouteBuilder MapWordEndpoints(this IEndpointRouteBuilder endpoints)
+    public static int MajorVersion => 1;
+
+    public static string RoutePrefix => "/api/words";
+
+    public static void Map(RouteGroupBuilder groupBuilder)
     {
-        RouteGroupBuilder group = endpoints.MapGroup("/api/words")
-            .WithTags("Words");
+        groupBuilder.MapPost("/", CreateWord)
+            .WithName("CreateWordV1");
 
-        group.MapPost("/", CreateWord)
-            .WithName(nameof(CreateWord));
+        groupBuilder.MapGet("/", GetAllWords)
+            .WithName("GetAllWordsV1");
 
-        group.MapGet("/{id:guid}", GetWord)
-            .WithName(nameof(GetWord));
+        groupBuilder.MapGet("/{id:guid}", GetWord)
+            .WithName("GetWordV1");
 
-        group.MapGet("/", GetAllWords)
-            .WithName(nameof(GetAllWords));
+        groupBuilder.MapPut("/{id:guid}", UpdateWord)
+            .WithName("UpdateWordV1");
 
-        group.MapPut("/{id:guid}", UpdateWord)
-            .WithName(nameof(UpdateWord));
-
-        group.MapDelete("/{id:guid}", DeleteWord)
-            .WithName(nameof(DeleteWord));
-
-        return endpoints;
+        groupBuilder.MapDelete("/{id:guid}", DeleteWord)
+            .WithName("DeleteWordV1");
     }
 
     private static async Task<IResult> CreateWord(

@@ -1,12 +1,14 @@
-@CleanApiStarter_Api_HostAddress = http://localhost:5219
+@CleanApiStarter_Api_HostAddress = https://localhost:7285
 
 GET {{CleanApiStarter_Api_HostAddress}}/api/words
 Accept: application/json
+X-Api-Version: 1.0
 
 ###
 
 POST {{CleanApiStarter_Api_HostAddress}}/api/words
 Content-Type: application/json
+X-Api-Version: 1.0
 
 {
   "text": "observable",
@@ -14,5 +16,11 @@ Content-Type: application/json
   "synonyms": ["visible", "measurable"],
   "usageExample": "OpenTelemetry makes API behavior observable."
 }
+
+###
+
+GET {{CleanApiStarter_Api_HostAddress}}/api/words
+Accept: application/json
+X-Api-Version: 2.0
 
 ###

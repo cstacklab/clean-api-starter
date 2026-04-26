@@ -9,6 +9,7 @@ This repository is a Clean Architecture API starter template named `CleanApiStar
 - Keep project names fully qualified:
   - `CleanApiStarter.Api`
   - `CleanApiStarter.Application`
+  - `CleanApiStarter.Configuration`
   - `CleanApiStarter.Domain`
   - `CleanApiStarter.Infrastructure`
   - `CleanApiStarter.AppHost`
@@ -20,6 +21,7 @@ This repository is a Clean Architecture API starter template named `CleanApiStar
 - Keep clean architecture application layers under the `/src/` solution folder:
   - API
   - Application
+  - Configuration
   - Domain
   - Infrastructure
 - Keep Aspire/runtime support projects under the `/src/Common/` solution folder in `CleanApiStarter.slnx`:
@@ -33,8 +35,9 @@ This repository is a Clean Architecture API starter template named `CleanApiStar
 - Dependencies point inward:
   - `Domain` references nothing.
   - `Application` references `Domain`.
-  - `Infrastructure` references `Application`.
-  - `Api` composes `Application`, `Infrastructure`, and `AspNetCore`.
+  - `Configuration` references no application layers and contains only plain options classes plus options registration helpers.
+  - `Infrastructure` references `Application` and `Configuration`.
+  - `Api` composes `Application`, `Infrastructure`, `Configuration`, and `AspNetCore`.
 - Keep repository interfaces in `Application`, not `Domain`.
 - Keep database implementation details in `Infrastructure`.
 - Do not move `IDatabaseConnectionFactory` into `Application` or `Domain`.
@@ -59,7 +62,7 @@ This repository is a Clean Architecture API starter template named `CleanApiStar
 
 - Use a single Postgres database: `postgres`.
 - Do not create or reference a separate `wordlibrary` database.
-- AppHost should expose the API connection as `ConnectionStrings__postgres`.
+- AppHost should expose the API connection from the `postgres` resource, and application settings should read it through `ConnectionStrings:Postgres`.
 - `docker-compose.yml` should use `POSTGRES_DB=postgres`.
 - Database schema scripts live in `database/migrations`, for example:
   - `database/migrations/V001__create_words_table.sql`
@@ -76,9 +79,12 @@ This repository is a Clean Architecture API starter template named `CleanApiStar
 - Keep `CleanApiStarter.AspNetCore`.
 - It centralizes Aspire-friendly runtime defaults:
   - OpenTelemetry traces, metrics, logs, and OTLP export
+  - problem-details exception handling
+  - `/version` endpoint
   - health endpoints
   - service discovery
   - default HTTP client resilience
+  - security defaults such as removing the Kestrel `Server` response header
 - API `Program.cs` should stay small and call:
   - `builder.AddAspNetCoreDefaults();`
   - `app.UseAspNetCoreDefaults();`
@@ -86,11 +92,20 @@ This repository is a Clean Architecture API starter template named `CleanApiStar
 - Shared middleware such as HTTP request logging belongs in `CleanApiStarter.AspNetCore`, not duplicated inside each API project.
 - Keep OpenTelemetry logs configured to include scopes, formatted messages, and parsed state values so structured message-template properties show up in Aspire.
 - Use structured logging message templates instead of interpolated log strings. Prefer stable property names like `{WordId}` and `{WordCount}`.
+- Register root settings once with `AddAppSettings(builder.Configuration)`, then inject `AppSettings` directly when services need configuration values.
+- Do not add generic options registration helpers until the template has multiple real options sections that need them.
+- Do not create a broad `Shared` project. Keep cross-project settings in `CleanApiStarter.Configuration`.
+- Keep dependency injection validation enabled with `ValidateOnBuild` and `ValidateScopes`.
 
 ## API Style
 
 - Prefer Minimal APIs for this template.
-- Keep `Program.cs` small by placing route groups in endpoint mapping classes such as `Api/Endpoints/WordEndpoints.cs`.
+- Keep `Program.cs` small by placing route groups in endpoint group classes under version folders such as `Api/Endpoints/V1/Words.cs`.
+- Endpoint group classes should implement `IEndpointGroup` from `CleanApiStarter.AspNetCore` and be mapped through `app.MapEndpoints(Assembly.GetExecutingAssembly());`.
+- Use built-in Minimal API mapping methods with explicit `.WithName(...)`; do not add custom `MapGet`/`MapPost` overloads that shadow framework methods.
+- API versions are selected with the required `X-Api-Version` request header.
+- Endpoint groups should declare `MajorVersion` to match their folder, for example `V1` uses `1` and `V2` uses `2`.
+- Endpoint names must be globally unique across versions. Prefer names suffixed with the version, such as `GetAllWordsV1` and `GetAllWordsV2`.
 - Do not reintroduce MVC controllers unless the template intentionally changes direction.
 
 ## Packages

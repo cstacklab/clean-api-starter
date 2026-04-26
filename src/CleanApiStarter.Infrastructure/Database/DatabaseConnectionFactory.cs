@@ -5,10 +5,10 @@ public interface IDatabaseConnectionFactory
     IDbConnection CreateConnection();
 }
 
-public class PostgresConnectionFactory(string connectionString) : IDatabaseConnectionFactory
+public class PostgresConnectionFactory(AppSettings appSettings) : IDatabaseConnectionFactory
 {
     public IDbConnection CreateConnection()
     {
-        return new NpgsqlConnection(connectionString);
+        return new NpgsqlConnection(appSettings.ConnectionStrings.Postgres);
     }
 }
