@@ -40,12 +40,17 @@ This repository is a Clean Architecture API starter template named `CleanApiStar
   - `Api` composes `Application`, `Infrastructure`, `Configuration`, and `AspNetCore`.
 - Keep repository interfaces in `Application`, not `Domain`.
 - Keep database implementation details in `Infrastructure`.
-- Do not move `IDatabaseConnectionFactory` into `Application` or `Domain`.
 - Keep domain models persistence-agnostic. For example, `Word.Synonyms` stays `List<string>`, even though Postgres stores it as `jsonb`.
-- Private database projection types such as `WordRow` may live inside their repository when they are only used there.
+- Use EF Core through `ApplicationDbContext` for application persistence. Do not reintroduce Dapper for the default template data access path.
+- Keep `ApplicationDbContext` in `CleanApiStarter.Infrastructure/Persistence`, not in `Identity`. The context owns both application entities and Identity storage, so it is a persistence concern.
+- Keep EF Core fluent API entity maps in `CleanApiStarter.Infrastructure/Persistence/Configuration` using `IEntityTypeConfiguration<T>`. Do not put entity mapping logic directly inside `ApplicationDbContext` unless there is a very small one-off reason.
+- Keep Identity-specific classes, such as `ApplicationUser` and auth services, under `CleanApiStarter.Infrastructure/Identity`.
 
 ## API and Application Conventions
 
+- Organize the `Application` project by feature. Put feature-specific contracts, DTOs, and application services under folders such as `Application/Features/Words` or `Application/Features/Auth`.
+- Do not create generic `Application/Services` or `Application/Models` folders for feature-specific code.
+- Keep cross-cutting application abstractions under `Application/Common`, for example `Application/Common/Interfaces`.
 - Use Scalar, not Swagger/Swashbuckle.
 - Use `Microsoft.AspNetCore.OpenApi` with:
   - `builder.Services.AddOpenApi();`
@@ -67,6 +72,7 @@ This repository is a Clean Architecture API starter template named `CleanApiStar
 - Database schema scripts live in `database/migrations`, for example:
   - `database/migrations/V001__create_words_table.sql`
 - Do not add API startup database initialization such as `DbInitializer` or DbUp calls. Aspire/Docker init scripts own local schema creation.
+- EF Core is used for application data access and Identity storage, but schema creation still belongs to the SQL scripts in `database/migrations`.
 - Docker Postgres init scripts run only on first volume creation. If scripts need to replay, delete the old volume.
 - This repo uses `postgres:latest`. Because Postgres 18+ expects the data volume mounted at `/var/lib/postgresql`, do not mount the volume at `/var/lib/postgresql/data`.
 - In Aspire, use a server resource name that does not conflict with the database resource name, for example:
@@ -103,10 +109,22 @@ This repository is a Clean Architecture API starter template named `CleanApiStar
 - Keep `Program.cs` small by placing route groups in endpoint group classes under version folders such as `Api/Endpoints/V1/Words.cs`.
 - Endpoint group classes should implement `IEndpointGroup` from `CleanApiStarter.AspNetCore` and be mapped through `app.MapEndpoints(Assembly.GetExecutingAssembly());`.
 - Use built-in Minimal API mapping methods with explicit `.WithName(...)`; do not add custom `MapGet`/`MapPost` overloads that shadow framework methods.
-- API versions are selected with the required `X-Api-Version` request header.
+- API versions are selected with the optional `X-Api-Version` request header. Missing versions default to v1.
 - Endpoint groups should declare `MajorVersion` to match their folder, for example `V1` uses `1` and `V2` uses `2`.
 - Endpoint names must be globally unique across versions. Prefer names suffixed with the version, such as `GetAllWordsV1` and `GetAllWordsV2`.
 - Do not reintroduce MVC controllers unless the template intentionally changes direction.
+
+## Authentication
+
+- Authentication is API-first:
+  - clients obtain a Google ID token
+  - `POST /api/auth/google` validates it
+  - the API issues its own JWT
+- Keep JWT bearer authentication setup in `CleanApiStarter.AspNetCore`.
+- Keep local user/role storage in ASP.NET Core Identity under `CleanApiStarter.Infrastructure`.
+- Do not use cookies as the default API auth mechanism.
+- Keep the development Google login helper page unversioned so it can be opened directly in a browser.
+- Protected API calls should send `Authorization: Bearer <api-jwt>`. Send `X-Api-Version` only when selecting a non-default API version.
 
 ## Packages
 

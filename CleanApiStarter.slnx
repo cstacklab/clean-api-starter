@@ -11,6 +11,7 @@
   </Folder>
   <Folder Name="/database/migrations/">
     <File Path="database/migrations/V001__create_words_table.sql" />
+    <File Path="database/migrations/V002__create_identity_tables.sql" />
   </Folder>
   <Folder Name="/src/">
     <Project Path="src/CleanApiStarter.Api/CleanApiStarter.Api.csproj" />

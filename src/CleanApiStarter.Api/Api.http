@@ -1,14 +1,29 @@
 @CleanApiStarter_Api_HostAddress = https://localhost:7285
+@AccessToken = paste-api-jwt-here
 
 GET {{CleanApiStarter_Api_HostAddress}}/api/words
 Accept: application/json
-X-Api-Version: 1.0
+
+###
+
+POST {{CleanApiStarter_Api_HostAddress}}/api/auth/google
+Content-Type: application/json
+
+{
+  "idToken": "paste-google-id-token-here"
+}
+
+###
+
+GET {{CleanApiStarter_Api_HostAddress}}/api/auth/me
+Accept: application/json
+Authorization: Bearer {{AccessToken}}
 
 ###
 
 POST {{CleanApiStarter_Api_HostAddress}}/api/words
 Content-Type: application/json
-X-Api-Version: 1.0
+Authorization: Bearer {{AccessToken}}
 
 {
   "text": "observable",
@@ -22,5 +37,11 @@ X-Api-Version: 1.0
 GET {{CleanApiStarter_Api_HostAddress}}/api/words
 Accept: application/json
 X-Api-Version: 2.0
+Authorization: Bearer {{AccessToken}}
+
+###
+
+DELETE {{CleanApiStarter_Api_HostAddress}}/api/words/00000000-0000-0000-0000-000000000000
+Authorization: Bearer {{AccessToken}}
 
 ###

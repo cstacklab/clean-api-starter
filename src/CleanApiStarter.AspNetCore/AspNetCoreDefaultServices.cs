@@ -6,6 +6,8 @@ public static partial class Extensions
     {
         builder.Services.Configure<Microsoft.AspNetCore.Server.Kestrel.Core.KestrelServerOptions>(
             options => options.AddServerHeader = false);
+
+        builder.Services.AddHttpContextAccessor();
     }
 
     private static void AddProblemDetailsDefaults(this IHostApplicationBuilder builder)
@@ -19,10 +21,36 @@ public static partial class Extensions
         builder.Services.AddApiVersioning(options =>
         {
             options.DefaultApiVersion = new ApiVersion(1);
-            options.AssumeDefaultVersionWhenUnspecified = false;
+            options.AssumeDefaultVersionWhenUnspecified = true;
             options.ReportApiVersions = true;
             options.ApiVersionReader = new HeaderApiVersionReader("X-Api-Version");
         });
+    }
+
+    private static void AddAuthenticationDefaults(this WebApplicationBuilder builder)
+    {
+        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer();
+
+        builder.Services.AddAuthorization();
+
+        builder.Services.AddOptions<JwtBearerOptions>(JwtBearerDefaults.AuthenticationScheme)
+            .Configure<AppSettings>((options, appSettings) =>
+            {
+                JwtAuthenticationSettings jwtSettings = appSettings.Authentication.Jwt;
+
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidIssuer = jwtSettings.Issuer,
+                    ValidateAudience = true,
+                    ValidAudience = jwtSettings.Audience,
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.SigningKey)),
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.FromMinutes(1)
+                };
+            });
     }
 
     private static void AddHttpLoggingDefaults(this IHostApplicationBuilder builder)
@@ -31,12 +59,15 @@ public static partial class Extensions
 
         builder.Services.AddHttpLogging(options =>
         {
+            options.CombineLogs = true;
             options.LoggingFields =
                 HttpLoggingFields.RequestMethod |
                 HttpLoggingFields.RequestPath |
                 HttpLoggingFields.ResponseStatusCode |
                 HttpLoggingFields.Duration;
         });
+
+        builder.Services.AddHttpLoggingInterceptor<UserIdHttpLoggingInterceptor>();
     }
 
     private static void AddServiceDiscoveryDefaults(this IHostApplicationBuilder builder)

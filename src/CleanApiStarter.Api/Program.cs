@@ -8,6 +8,7 @@ builder.Services.AddOpenApi();
 builder.Services.AddAppSettings(builder.Configuration);
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure();
+builder.Services.AddScoped<IUser, CurrentUser>();
 
 WebApplication app = builder.Build();
 
@@ -20,6 +21,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseAspNetCoreDefaults();
 app.UseHttpsRedirection();
+app.MapGoogleLoginPage();
 app.MapEndpoints(Assembly.GetExecutingAssembly());
 app.MapDefaultEndpoints();
 

@@ -1,6 +1,6 @@
 namespace CleanApiStarter.AspNetCore;
 
-public sealed class ProblemDetailsExceptionHandler : IExceptionHandler
+public sealed class ProblemDetailsExceptionHandler(ILogger<ProblemDetailsExceptionHandler> logger) : IExceptionHandler
 {
     public async ValueTask<bool> TryHandleAsync(
         HttpContext httpContext,
@@ -45,6 +45,24 @@ public sealed class ProblemDetailsExceptionHandler : IExceptionHandler
                     Detail = "An unexpected error occurred."
                 })
         };
+
+        if (statusCode >= StatusCodes.Status500InternalServerError)
+        {
+            logger.LogError(
+                exception,
+                "Unhandled exception while processing {RequestMethod} {RequestPath}",
+                httpContext.Request.Method,
+                httpContext.Request.Path);
+        }
+        else
+        {
+            logger.LogWarning(
+                exception,
+                "Handled exception with status {StatusCode} while processing {RequestMethod} {RequestPath}",
+                statusCode,
+                httpContext.Request.Method,
+                httpContext.Request.Path);
+        }
 
         httpContext.Response.StatusCode = statusCode;
         await httpContext.Response.WriteAsJsonAsync(problemDetails, cancellationToken);

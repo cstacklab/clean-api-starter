@@ -8,6 +8,8 @@ public sealed class Words : IEndpointGroup
 
     public static void Map(RouteGroupBuilder groupBuilder)
     {
+        groupBuilder.RequireAuthorization();
+
         groupBuilder.MapGet("/", GetAllWords)
             .WithName("GetAllWordsV2");
     }
