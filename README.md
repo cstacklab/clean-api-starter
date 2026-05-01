@@ -1,104 +1,519 @@
 # CleanApiStarter
 
-A Clean Architecture API starter template for .NET, Aspire, PostgreSQL, and OpenTelemetry.
+`CleanApiStarter` is a Clean Architecture API starter template for .NET 10, ASP.NET Core Minimal APIs, Aspire, PostgreSQL, OpenTelemetry, JWT authentication, API versioning, FluentValidation, Scalar, EF Core, and automated tests.
 
-The API uses Minimal APIs with endpoint group classes. `CleanApiStarter.AspNetCore` discovers endpoint groups from the API assembly so `Program.cs` stays small while routes remain easy to find.
+The project is intentionally both a template and a working reference application. The sample domain is project management: authenticated users can create projects, manage project tasks, filter tasks by status, and complete tasks.
 
-API versions are selected with the optional `X-Api-Version` request header. Requests without a version use v1 by default. Endpoint groups live under version folders such as `Endpoints/V1` and `Endpoints/V2`.
-OpenAPI documents are generated per API version and shown in Scalar with a version selector.
+## Features
 
-Collection endpoints return an `ArrayResult<T>` envelope when they are not paginated. Paginated endpoints accept `limit` and `offset` query parameters and return `PaginatedResult<T>` metadata with the items. Single-resource endpoints return the resource object directly.
+- Clean Architecture solution structure with separate `Api`, `Application`, `Domain`, `Infrastructure`, `Configuration`, and shared ASP.NET Core defaults projects.
+- Minimal APIs organized by endpoint group and API version folders.
+- Header-based API versioning with optional `X-Api-Version`; missing versions default to v1.
+- Versioned OpenAPI documents shown with Scalar.
+- Google ID token sign-in that issues the API's own JWT.
+- ASP.NET Core Identity for local users, roles, and external login storage.
+- Real JWT bearer authentication for protected APIs.
+- EF Core with PostgreSQL for application data and Identity storage.
+- PostgreSQL local development through Aspire or Docker Compose.
+- Database schema scripts under `database/migrations`.
+- OpenTelemetry traces, metrics, and structured logs through Aspire-friendly defaults.
+- HTTP request logging with authenticated user id.
+- `X-Request-ID` response header containing the current trace id.
+- Problem Details exception responses.
+- Response compression with Brotli and gzip.
+- FluentValidation endpoint validation returning `422 Unprocessable Entity`.
+- Result wrappers for collection endpoints: `PaginatedResult<T>` and `ArrayResult<T>`.
+- xUnit v3 unit tests with AutoFixture, AutoFixture.AutoNSubstitute, NSubstitute, and Shouldly.
+- MSTest API integration tests with Testcontainers for PostgreSQL.
+- Local coverage script that generates an HTML report with ReportGenerator.
 
-The reference feature is project management. Users can create projects, list their projects, manage tasks inside projects, filter tasks by status, and complete tasks. Project membership controls task visibility, and project deletion is owner-only.
-
-## Authentication
-
-The API validates Google ID tokens and issues its own JWT access token. Google proves the user identity; ASP.NET Core Identity stores local users, roles, and external logins.
-
-Set the Google client id with user-secrets:
-
-```bash
-dotnet user-secrets set "Authentication:Google:ClientId" "<google-client-id>" --project src/CleanApiStarter.Api/CleanApiStarter.Api.csproj
-```
-
-For local testing, open the development-only helper page:
+## Solution Layout
 
 ```text
-https://localhost:7285/auth/google-login
+CleanApiStarter
+├── database
+│   └── migrations
+├── scripts
+├── src
+│   ├── CleanApiStarter.Api
+│   ├── CleanApiStarter.Application
+│   ├── CleanApiStarter.Domain
+│   ├── CleanApiStarter.Infrastructure
+│   └── Common
+│       ├── CleanApiStarter.AppHost
+│       ├── CleanApiStarter.AspNetCore
+│       └── CleanApiStarter.Configuration
+└── tests
+    ├── CleanApiStarter.Api.IntegrationTests
+    ├── CleanApiStarter.Application.UnitTests
+    └── CleanApiStarter.Tests
 ```
 
-After signing in with Google, the page calls `POST /api/auth/google` and shows the API JWT. Use that JWT with protected endpoints:
+Layer dependencies point inward:
 
-```http
-Authorization: Bearer <api-jwt>
+- `Domain` references nothing.
+- `Application` references `Domain`.
+- `Infrastructure` references `Application` and `Configuration`.
+- `Api` composes `Application`, `Infrastructure`, `Configuration`, and `AspNetCore`.
+- `Configuration` contains plain settings classes and options registration.
+- `AspNetCore` contains reusable web/runtime defaults.
+- `AppHost` contains Aspire orchestration.
+
+## Requirements
+
+- .NET SDK `10.0.203` or compatible latest feature SDK
+- Docker Desktop
+- Google Chrome, only for the local coverage script opening the HTML report
+
+The SDK is pinned in `global.json`:
+
+```json
+{
+  "sdk": {
+    "version": "10.0.203",
+    "rollForward": "latestFeature"
+  }
+}
 ```
 
-New Google users are created as local Identity users and assigned the `User` role by default. The database init scripts create the `User` and `Admin` roles.
-
-## Learn OpenTelemetry with .NET Aspire
-
-This solution can run the existing API with a local PostgreSQL container through .NET Aspire. Aspire also provides the local dashboard where you can inspect logs, traces, metrics, and resource health.
-
-### Run with Aspire
+## Run With Aspire
 
 ```bash
 dotnet run --project src/CleanApiStarter.AppHost/CleanApiStarter.AppHost.csproj
 ```
 
-Open the Aspire dashboard URL printed in the terminal. The AppHost starts:
+Aspire starts:
 
-- `api`: the ASP.NET Core API
-- `postgres`: a local PostgreSQL container
-- `postgres`: the API database
-- `pgAdmin`: a browser UI for inspecting PostgreSQL
+- the API
+- a PostgreSQL container using `postgres:latest`
+- pgAdmin
+- the Aspire dashboard
 
-The API receives its `postgres` connection string from Aspire, which binds to `ConnectionStrings:Postgres`. Running the API directly uses `ConnectionStrings:Postgres` from `src/CleanApiStarter.Api/appsettings.Development.json`, which matches the existing `docker-compose.yml`.
+Open the Aspire dashboard URL printed in the terminal. Use it to inspect resources, logs, traces, metrics, health, and PostgreSQL activity.
 
-Database scripts live in `database`. Aspire and Docker Compose copy `database/migrations` into the Postgres container init folder. Docker runs them only when the Postgres data directory is created for the first time. Because the AppHost uses the persistent `clean-api-starter-postgres-data` volume, delete that Docker volume if you need to replay the scripts from scratch.
+The AppHost configures PostgreSQL like this:
 
-- `database/migrations`: versioned schema scripts that can also be reused by CI/CD migration tools such as Flyway.
+- server resource: `postgres-server`
+- database resource: `postgres`
+- data volume: `clean-api-starter-postgres-data`
+- volume mount: `/var/lib/postgresql`
+- init scripts: `database/migrations`
 
-### What to Observe
+PostgreSQL init scripts run only when the database volume is first created. If you change scripts and want them replayed locally, delete the old Docker volume.
 
-After the dashboard is running, send requests to the API through Scalar or another HTTP client. In the Aspire dashboard:
+## Run With Docker Compose
 
-- Logs show structured application and framework log entries. The project and task use cases emit fields such as `ProjectId`, `TaskId`, `ProjectCount`, and `UserId`.
-- Request logs show method, path, response status code, duration, and `UserId` without logging request or response bodies. `CleanApiStarter.AspNetCore` keeps the `Microsoft.AspNetCore.HttpLogging` category at `Information` even when broader ASP.NET Core logs are filtered to `Warning`.
-- Responses include an `X-Request-ID` header containing the current OpenTelemetry trace id, which can be used to correlate API responses with Aspire traces and logs.
-- Responses support Brotli and gzip compression when clients send an `Accept-Encoding` header.
-- Traces show incoming HTTP requests and PostgreSQL commands from Npgsql.
-- Metrics show ASP.NET Core, HTTP client, and .NET runtime measurements.
-- `/version` exposes the running application version.
-- Health checks expose `/health` and `/alive` in Development.
-
-### Coding Conventions
-
-Cancellation tokens are explicit at application and infrastructure boundaries. Do not use `CancellationToken cancellationToken = default` in service or repository contracts. API actions should accept a `CancellationToken` parameter and pass it through the application and repository calls.
-
-Use structured logging message templates instead of interpolated log strings. Prefer stable property names such as `{ProjectId}` or `{TaskId}` so Aspire and OpenTelemetry can index and filter them.
-
-Configuration classes live in `CleanApiStarter.Configuration`. Register root settings once with `AddAppSettings(builder.Configuration)`, then inject `AppSettings` directly where configuration values are needed.
-
-Request validation uses FluentValidation. Validators live beside their feature request models in the `Application` project and are executed by a Minimal API endpoint filter from `CleanApiStarter.AspNetCore`. FluentValidation failures return `422 Unprocessable Entity`.
-
-### Run with Docker Compose Only
-
-If you want to run PostgreSQL without Aspire:
+If you want only PostgreSQL without Aspire:
 
 ```bash
 docker compose up -d
 dotnet run --project src/CleanApiStarter.Api/CleanApiStarter.Api.csproj
 ```
 
-### Troubleshooting Aspire Certificates
+`docker-compose.yml` starts one database named `postgres` and mounts `database/migrations` into the Postgres init directory.
 
-If the Aspire dashboard logs an `UntrustedRoot` error while calling gRPC services, or the AppHost prints `No trusted Aspire development certificate was found`, trust the local ASP.NET Core development certificate:
+## Database
+
+Database scripts live here:
+
+```text
+database/migrations
+├── V001__create_projects_and_tasks_tables.sql
+└── V002__create_identity_tables.sql
+```
+
+The application uses EF Core through `ApplicationDbContext`, but local schema creation is owned by the SQL scripts. There are no DbUp calls or API startup database initializers.
+
+`ApplicationDbContext` lives in:
+
+```text
+src/CleanApiStarter.Infrastructure/Persistence
+```
+
+EF Core mappings live in:
+
+```text
+src/CleanApiStarter.Infrastructure/Persistence/Configuration
+```
+
+## API Style
+
+The API uses Minimal APIs. `Program.cs` stays small and delegates endpoint registration to endpoint group classes.
+
+Endpoint groups live under version folders:
+
+```text
+src/CleanApiStarter.Api/Endpoints/V1
+src/CleanApiStarter.Api/Endpoints/V2
+```
+
+Each endpoint group implements `IEndpointGroup` from `CleanApiStarter.AspNetCore` and is discovered through:
+
+```csharp
+app.MapEndpoints(Assembly.GetExecutingAssembly());
+```
+
+Endpoint names are globally unique across versions, for example:
+
+```text
+GetProjectsV1
+GetProjectsV2
+```
+
+## API Versioning
+
+API versioning uses header-based version selection:
+
+```http
+X-Api-Version: 1.0
+```
+
+The header is optional. Requests without `X-Api-Version` use v1.
+
+The project uses the .NET 10 API versioning/OpenAPI package setup:
+
+- `Asp.Versioning.Http`
+- `Asp.Versioning.Mvc.ApiExplorer`
+- `Asp.Versioning.OpenApi`
+- `Microsoft.AspNetCore.OpenApi`
+
+OpenAPI documents are generated per version and displayed in Scalar.
+
+## Scalar
+
+This project uses Scalar instead of Swagger/Swashbuckle.
+
+When running in Development, OpenAPI and Scalar are mapped by the API:
+
+- versioned OpenAPI documents
+- Scalar API reference with version selection
+
+## Authentication
+
+Authentication is API-first.
+
+The intended production flow is:
+
+1. A client obtains a Google ID token.
+2. The client sends it to `POST /api/auth/google`.
+3. The API validates the Google ID token.
+4. The API creates or updates the local ASP.NET Core Identity user.
+5. The API issues its own JWT.
+6. Protected API calls use:
+
+```http
+Authorization: Bearer <api-jwt>
+```
+
+The API does not use cookies as the default authentication mechanism.
+
+### Google Client ID
+
+Create an OAuth client in Google Cloud Console and set the client id with user secrets:
+
+```bash
+dotnet user-secrets set "Authentication:Google:ClientId" "<google-client-id>" --project src/CleanApiStarter.Api/CleanApiStarter.Api.csproj
+```
+
+For local browser testing, open the development helper page:
+
+```text
+https://localhost:7285/auth/google-login
+```
+
+The helper page signs in with Google, calls the API token endpoint, displays the API JWT, and includes a copy button.
+
+## Authorization
+
+Protected endpoint groups call `RequireAuthorization()` once at the group level, so individual project/task endpoints do not need repeated authorization declarations.
+
+Project authorization rules are implemented in the application service and repository queries:
+
+- users can only see projects they belong to
+- users can only see and manage tasks inside projects they belong to
+- project deletion is owner-only
+
+## Application Features
+
+The reference feature is project and task management.
+
+Projects:
+
+- create project
+- list current user's projects
+- get project by id
+- delete project as owner
+
+Tasks:
+
+- create task under a project
+- list tasks with `limit` and `offset`
+- filter tasks by status
+- get task by id
+- update task
+- complete task
+- delete task
+
+The application project is organized by feature:
+
+```text
+src/CleanApiStarter.Application/Features/Auth
+src/CleanApiStarter.Application/Features/Projects
+```
+
+Cross-cutting abstractions live under:
+
+```text
+src/CleanApiStarter.Application/Common
+```
+
+## Response Shapes
+
+Single-resource endpoints return the resource DTO directly.
+
+Paginated endpoints return `PaginatedResult<T>`:
+
+```json
+{
+  "items": [],
+  "limit": 20,
+  "offset": 0,
+  "totalCount": 0,
+  "hasPreviousPage": false,
+  "hasNextPage": false
+}
+```
+
+Non-paginated collection endpoints should return `ArrayResult<T>`:
+
+```json
+{
+  "items": [],
+  "count": 0
+}
+```
+
+## Validation
+
+Request validation uses FluentValidation, not DataAnnotations.
+
+Validators live beside request models in the `Application` project. The shared Minimal API validation filter lives in `CleanApiStarter.AspNetCore`.
+
+Validation failures return:
+
+```http
+422 Unprocessable Entity
+```
+
+## Configuration
+
+Configuration classes live in `CleanApiStarter.Configuration`.
+
+The root configuration object is:
+
+```csharp
+AppSettings
+```
+
+It includes:
+
+- `ConnectionStrings.Postgres`
+- `Authentication.Google.ClientId`
+- `Authentication.Jwt.Issuer`
+- `Authentication.Jwt.Audience`
+- `Authentication.Jwt.SigningKey`
+- `Authentication.Jwt.ExpirationMinutes`
+
+The API registers settings once:
+
+```csharp
+builder.Services.AddAppSettings(builder.Configuration);
+```
+
+Services can inject `AppSettings` directly.
+
+## Observability
+
+`CleanApiStarter.AspNetCore` centralizes runtime defaults:
+
+- OpenTelemetry traces
+- OpenTelemetry metrics
+- OpenTelemetry logs
+- OTLP export for Aspire
+- structured log formatting
+- HTTP request logging
+- health checks
+- service discovery
+- HTTP client resilience
+- problem details
+- response compression
+- request id header
+- Kestrel `Server` header removal
+
+When the API runs under Aspire, inspect the dashboard for:
+
+- API request traces
+- Npgsql database traces
+- structured logs
+- request logs with `UserId`
+- runtime metrics
+- resource health
+
+Every response includes:
+
+```http
+X-Request-ID: <trace-id>
+```
+
+Use this value to correlate client responses with logs and traces.
+
+## Health And Version Endpoints
+
+The shared ASP.NET Core defaults map:
+
+```text
+/health
+/alive
+/version
+```
+
+`/version` exposes the running application version.
+
+## Testing
+
+### Unit Tests
+
+Application unit tests use:
+
+- xUnit v3
+- AutoFixture.xUnit3
+- AutoFixture.AutoNSubstitute
+- NSubstitute
+- Shouldly
+
+Common test helpers live in:
+
+```text
+tests/CleanApiStarter.Tests
+```
+
+Current reusable helpers:
+
+- `AutoNSubstituteDataAttribute`
+- `ApiApplicationFactory<TProgram>`
+
+Test names follow:
+
+```text
+UnitOfWork_StateUnderTest_ExpectedBehavior
+```
+
+Tests use AAA sections:
+
+```csharp
+// Arrange
+// Act
+// Assert
+```
+
+Run unit tests:
+
+```bash
+dotnet test tests/CleanApiStarter.Application.UnitTests/CleanApiStarter.Application.UnitTests.csproj
+```
+
+### API Integration Tests
+
+API integration tests use:
+
+- MSTest
+- Microsoft.AspNetCore.Mvc.Testing
+- Testcontainers for PostgreSQL
+- Shouldly
+
+The integration test factory starts a real Postgres container, applies scripts from `database/migrations`, boots the API through `WebApplicationFactory<Program>`, and creates real JWTs from `appsettings.Testing.json`.
+
+The API integration tests keep JWT bearer authentication active. They do not replace authentication with a fake scheme.
+
+Run integration tests:
+
+```bash
+dotnet test tests/CleanApiStarter.Api.IntegrationTests/CleanApiStarter.Api.IntegrationTests.csproj
+```
+
+Run all tests:
+
+```bash
+dotnet test CleanApiStarter.slnx
+```
+
+## Coverage
+
+Generate coverage and open the HTML report in Chrome:
+
+```bash
+scripts/test-coverage.sh
+```
+
+The script:
+
+- deletes the previous `artifacts/coverage` folder
+- restores local .NET tools
+- runs tests with `XPlat Code Coverage`
+- generates an HTML report with ReportGenerator
+- opens the report in Google Chrome
+
+Coverage output:
+
+```text
+artifacts/coverage/report/index.html
+```
+
+## Build
+
+Restore and build:
+
+```bash
+dotnet restore CleanApiStarter.slnx --disable-parallel
+dotnet build CleanApiStarter.slnx --no-restore /nr:false -v:minimal
+```
+
+## Package Management
+
+Package versions are managed centrally in:
+
+```text
+Directory.Packages.props
+```
+
+Keep package versions sorted alphabetically by `Include`. Do not add package versions directly to individual project files.
+
+## Coding Conventions
+
+- Use explicit local types.
+- Use project-level `GlobalUsings.cs`.
+- Keep cancellation tokens explicit. Do not use `CancellationToken cancellationToken = default` in service or repository contracts.
+- Use `required` and `init` for required non-null DTO and domain properties.
+- Use nullable types only for genuinely optional values.
+- Use structured logging message templates instead of interpolated log strings.
+- Keep repository interfaces in `Application`.
+- Keep repository implementations and EF Core details in `Infrastructure`.
+- Keep domain models persistence-agnostic.
+- Do not reintroduce Dapper for the default data access path.
+- Do not reintroduce MVC controllers unless the template intentionally changes direction.
+- Do not add Swashbuckle; use Scalar.
+
+## Troubleshooting
+
+### Aspire certificate errors
+
+If Aspire logs an `UntrustedRoot` error or reports that no trusted development certificate exists, trust the local ASP.NET Core development certificate:
 
 ```bash
 dotnet dev-certs https --check --trust
 ```
 
-If the certificate is missing or untrusted, reset it and trust it again:
+If needed, reset and trust again:
 
 ```bash
 dotnet dev-certs https --clean
@@ -106,8 +521,35 @@ dotnet dev-certs https --trust
 dotnet dev-certs https --check --trust
 ```
 
-On macOS, accept the Keychain prompt and enter your password if requested. Then close and reopen the browser, and start Aspire again:
+On macOS, accept the Keychain prompt and enter your password if requested.
+
+### PostgreSQL init scripts did not run
+
+Postgres init scripts only run when the data directory is created. Delete the existing volume and start again.
+
+For Docker Compose:
 
 ```bash
-dotnet run --project src/CleanApiStarter.AppHost/CleanApiStarter.AppHost.csproj
+docker compose down -v
+docker compose up -d
 ```
+
+For Aspire, delete the `clean-api-starter-postgres-data` Docker volume.
+
+### Postgres latest and data volumes
+
+This template uses `postgres:latest`. PostgreSQL 18+ expects data mounted at:
+
+```text
+/var/lib/postgresql
+```
+
+Do not mount the volume at:
+
+```text
+/var/lib/postgresql/data
+```
+
+## License
+
+This project is licensed under the GNU General Public License v3.0. See `LICENSE` for details.
