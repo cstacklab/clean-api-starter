@@ -146,6 +146,18 @@ This repository is a Clean Architecture API starter template named `CleanApiStar
 - Keep `PackageVersion` items sorted alphabetically by `Include`.
 - Do not add package versions directly in individual `.csproj` files.
 
+## Testing
+
+- Use xUnit v3, AutoFixture.xUnit3, AutoFixture.AutoNSubstitute, NSubstitute, and Shouldly for unit tests.
+- Reusable test helpers belong in `CleanApiStarter.Tests`.
+- Application unit tests should reference `CleanApiStarter.Tests` instead of duplicating common test setup.
+- API integration tests use MSTest and Testcontainers for Postgres.
+- API integration tests should keep real JWT bearer authentication active. Generate test JWTs from `appsettings.Testing.json` instead of replacing authentication with a fake scheme.
+- API integration tests should start a Postgres Testcontainer and apply SQL scripts from `database/migrations`.
+- Keep test app settings in `appsettings.Testing.json`.
+- Test methods must follow the naming pattern `UnitOfWork_StateUnderTest_ExpectedBehavior`.
+- Tests must follow AAA format with explicit `// Arrange`, `// Act`, and `// Assert` sections.
+
 ## Verification
 
 - After structural or package changes, run:

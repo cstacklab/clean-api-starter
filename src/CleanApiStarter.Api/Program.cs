@@ -36,3 +36,5 @@ app.MapEndpoints(Assembly.GetExecutingAssembly());
 app.MapDefaultEndpoints();
 
 app.Run();
+
+public partial class Program;

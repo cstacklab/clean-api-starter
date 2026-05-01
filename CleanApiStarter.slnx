@@ -27,7 +27,7 @@
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/CleanApiStarter.Tests/CleanApiStarter.Tests.csproj" />
-    <Project Path="tests\CleanApiStarter.Api.IntegerationTests\CleanApiStarter.Api.IntegerationTests.csproj" />
+    <Project Path="tests\CleanApiStarter.Api.IntegrationTests\CleanApiStarter.Api.IntegrationTests.csproj" />
     <Project Path="tests\CleanApiStarter.Application.UnitTests\CleanApiStarter.Application.UnitTests.csproj" />
   </Folder>
 </Solution>
