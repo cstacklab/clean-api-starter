@@ -3,6 +3,7 @@ global using System.Security.Claims;
 global using System.Text;
 global using System.Text.Json;
 
+global using CleanApiStarter.Application.Common.Models;
 global using CleanApiStarter.Application.Features.Auth;
 global using CleanApiStarter.Application.Features.Words;
 global using CleanApiStarter.Configuration;

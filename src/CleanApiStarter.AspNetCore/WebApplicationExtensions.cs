@@ -22,7 +22,8 @@ public static class WebApplicationExtensions
             RouteGroupBuilder group = app.MapGroup(routePrefix)
                 .WithTags(groupName)
                 .WithApiVersionSet(versionSet)
-                .MapToApiVersion(apiVersion);
+                .MapToApiVersion(apiVersion)
+                .AddEndpointFilter<ValidationFilter>();
 
             type.GetMethod(nameof(IEndpointGroup.Map))!.Invoke(null, [group]);
         }

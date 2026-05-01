@@ -51,11 +51,19 @@ This repository is a Clean Architecture API starter template named `CleanApiStar
 - Organize the `Application` project by feature. Put feature-specific contracts, DTOs, and application services under folders such as `Application/Features/Words` or `Application/Features/Auth`.
 - Do not create generic `Application/Services` or `Application/Models` folders for feature-specific code.
 - Keep cross-cutting application abstractions under `Application/Common`, for example `Application/Common/Interfaces`.
+- Return single resources as their DTO object directly.
+- Use `ArrayResult<T>` instead of returning raw arrays from non-paginated list endpoints.
+- Use `PaginatedQuery` for paginated request parameters and return `PaginatedResult<T>` directly for paginated collection responses.
+- Use FluentValidation for request validation. Put validators beside feature request models in `Application`, and rely on the shared Minimal API validation endpoint filter in `CleanApiStarter.AspNetCore`. FluentValidation failures should return `422 Unprocessable Entity`.
+- Do not use DataAnnotations for application request validation.
 - Use Scalar, not Swagger/Swashbuckle.
-- Use `Microsoft.AspNetCore.OpenApi` with:
-  - `builder.Services.AddOpenApi();`
-  - `app.MapOpenApi();`
-  - `app.MapScalarApiReference();`
+- Use the .NET 10 API versioning/OpenAPI setup from the Microsoft .NET blog:
+  - `Asp.Versioning.Http` v10
+  - `Asp.Versioning.Mvc.ApiExplorer` v10
+  - `Asp.Versioning.OpenApi`
+  - `builder.Services.AddApiVersioning(...).AddApiExplorer(...).AddOpenApi();`
+  - `app.MapOpenApi().WithDocumentPerVersion();`
+  - `app.MapScalarApiReference(...)` configured from `app.DescribeApiVersions()`
 - Do not add `Swashbuckle.AspNetCore`.
 - Cancellation tokens are explicit:
   - Do not use `CancellationToken cancellationToken = default` in service or repository contracts.
@@ -97,6 +105,8 @@ This repository is a Clean Architecture API starter template named `CleanApiStar
   - `app.MapDefaultEndpoints();`
 - Shared middleware such as HTTP request logging belongs in `CleanApiStarter.AspNetCore`, not duplicated inside each API project.
 - Keep OpenTelemetry logs configured to include scopes, formatted messages, and parsed state values so structured message-template properties show up in Aspire.
+- Responses should include `X-Request-ID` with the current trace id, configured centrally in `CleanApiStarter.AspNetCore`.
+- Response compression should be configured centrally in `CleanApiStarter.AspNetCore` with Brotli and gzip providers.
 - Use structured logging message templates instead of interpolated log strings. Prefer stable property names like `{WordId}` and `{WordCount}`.
 - Register root settings once with `AddAppSettings(builder.Configuration)`, then inject `AppSettings` directly when services need configuration values.
 - Do not add generic options registration helpers until the template has multiple real options sections that need them.
@@ -111,7 +121,7 @@ This repository is a Clean Architecture API starter template named `CleanApiStar
 - Use built-in Minimal API mapping methods with explicit `.WithName(...)`; do not add custom `MapGet`/`MapPost` overloads that shadow framework methods.
 - API versions are selected with the optional `X-Api-Version` request header. Missing versions default to v1.
 - Endpoint groups should declare `MajorVersion` to match their folder, for example `V1` uses `1` and `V2` uses `2`.
-- Endpoint names must be globally unique across versions. Prefer names suffixed with the version, such as `GetAllWordsV1` and `GetAllWordsV2`.
+- Endpoint names must be globally unique across versions. Prefer names suffixed with the version, such as `GetWordsV1` and `GetWordsV2`.
 - Do not reintroduce MVC controllers unless the template intentionally changes direction.
 
 ## Authentication

@@ -15,6 +15,7 @@ public static partial class Extensions
         builder.AddProblemDetailsDefaults();
         builder.AddApiVersioningDefaults();
         builder.AddAuthenticationDefaults();
+        builder.AddResponseCompressionDefaults();
         builder.AddHttpLoggingDefaults();
         builder.AddServiceDiscoveryDefaults();
         builder.Services.AddHealthChecks()
@@ -25,7 +26,9 @@ public static partial class Extensions
 
     public static WebApplication UseAspNetCoreDefaults(this WebApplication app)
     {
+        app.UseMiddleware<RequestIdMiddleware>();
         app.UseExceptionHandler();
+        app.UseResponseCompression();
         app.UseAuthentication();
         app.UseHttpLogging();
         app.UseAuthorization();

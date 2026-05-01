@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Authorization;
+
 namespace CleanApiStarter.AspNetCore;
 
 public static partial class Extensions
@@ -24,7 +26,12 @@ public static partial class Extensions
             options.AssumeDefaultVersionWhenUnspecified = true;
             options.ReportApiVersions = true;
             options.ApiVersionReader = new HeaderApiVersionReader("X-Api-Version");
-        });
+        })
+        .AddApiExplorer(options =>
+        {
+            options.GroupNameFormat = "'v'VVV";
+        })
+        .AddOpenApi();
     }
 
     private static void AddAuthenticationDefaults(this WebApplicationBuilder builder)
@@ -32,7 +39,12 @@ public static partial class Extensions
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer();
 
-        builder.Services.AddAuthorization();
+        builder.Services.AddAuthorization(options =>
+        {
+            options.FallbackPolicy = new AuthorizationPolicyBuilder()
+                .RequireAuthenticatedUser()
+                .Build();
+        });
 
         builder.Services.AddOptions<JwtBearerOptions>(JwtBearerDefaults.AuthenticationScheme)
             .Configure<AppSettings>((options, appSettings) =>
@@ -68,6 +80,27 @@ public static partial class Extensions
         });
 
         builder.Services.AddHttpLoggingInterceptor<UserIdHttpLoggingInterceptor>();
+    }
+
+    private static void AddResponseCompressionDefaults(this IHostApplicationBuilder builder)
+    {
+        builder.Services.AddResponseCompression(options =>
+        {
+            options.EnableForHttps = true;
+            options.Providers.Add<BrotliCompressionProvider>();
+            options.Providers.Add<GzipCompressionProvider>();
+            options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
+            [
+                "application/json",
+                "application/problem+json"
+            ]);
+        });
+
+        builder.Services.Configure<BrotliCompressionProviderOptions>(options =>
+            options.Level = CompressionLevel.Fastest);
+
+        builder.Services.Configure<GzipCompressionProviderOptions>(options =>
+            options.Level = CompressionLevel.Fastest);
     }
 
     private static void AddServiceDiscoveryDefaults(this IHostApplicationBuilder builder)

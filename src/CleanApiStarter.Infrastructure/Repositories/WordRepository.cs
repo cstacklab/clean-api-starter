@@ -17,12 +17,25 @@ public class WordRepository(ApplicationDbContext dbContext) : IWordRepository
             .SingleOrDefaultAsync(word => word.Id == id, cancellationToken);
     }
 
-    public async Task<IEnumerable<Word>> GetAllWordsAsync(CancellationToken cancellationToken)
+    public async Task<PaginatedResult<Word>> GetWordsAsync(PaginatedQuery query, CancellationToken cancellationToken)
     {
-        return await dbContext.Words
+        IQueryable<Word> wordsQuery = dbContext.Words
             .AsNoTracking()
-            .OrderBy(word => word.Text)
+            .OrderBy(word => word.Text);
+
+        int totalCount = await wordsQuery.CountAsync(cancellationToken);
+        List<Word> words = await wordsQuery
+            .Skip(query.Offset)
+            .Take(query.Limit)
             .ToListAsync(cancellationToken);
+
+        return new PaginatedResult<Word>
+        {
+            Items = words,
+            Limit = query.Limit,
+            Offset = query.Offset,
+            TotalCount = totalCount
+        };
     }
 
     public async Task<bool> UpdateWordAsync(Word word, CancellationToken cancellationToken)

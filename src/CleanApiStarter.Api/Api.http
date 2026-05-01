@@ -1,8 +1,9 @@
 @CleanApiStarter_Api_HostAddress = https://localhost:7285
 @AccessToken = paste-api-jwt-here
 
-GET {{CleanApiStarter_Api_HostAddress}}/api/words
+GET {{CleanApiStarter_Api_HostAddress}}/api/words?limit=20&offset=0
 Accept: application/json
+Authorization: Bearer {{AccessToken}}
 
 ###
 
@@ -34,7 +35,7 @@ Authorization: Bearer {{AccessToken}}
 
 ###
 
-GET {{CleanApiStarter_Api_HostAddress}}/api/words
+GET {{CleanApiStarter_Api_HostAddress}}/api/words?limit=20&offset=0
 Accept: application/json
 X-Api-Version: 2.0
 Authorization: Bearer {{AccessToken}}

@@ -24,6 +24,10 @@ public static class GoogleLoginPage
                       <script src="https://accounts.google.com/gsi/client" async defer></script>
                       <style>
                         body { font-family: system-ui, sans-serif; max-width: 760px; margin: 48px auto; padding: 0 24px; }
+                        .token-header { align-items: center; display: flex; gap: 12px; margin-top: 32px; }
+                        .token-header h2 { margin: 0; }
+                        button { cursor: pointer; padding: 6px 10px; }
+                        #copyStatus { color: #4b5563; font-size: 14px; }
                         pre { background: #111827; color: #e5e7eb; padding: 16px; overflow: auto; }
                       </style>
                     </head>
@@ -34,10 +38,16 @@ public static class GoogleLoginPage
                            data-callback="handleCredentialResponse">
                       </div>
                       <div class="g_id_signin" data-type="standard"></div>
-                      <h2>API JWT</h2>
+                      <div class="token-header">
+                        <h2>API JWT</h2>
+                        <button id="copyToken" type="button" onclick="copyAccessToken()" disabled>Copy token</button>
+                        <span id="copyStatus"></span>
+                      </div>
                       <pre id="token">Sign in with Google to generate a token.</pre>
 
                       <script>
+                        let accessToken = '';
+
                         async function handleCredentialResponse(response) {
                           const result = await fetch('/api/auth/google', {
                             method: 'POST',
@@ -48,7 +58,32 @@ public static class GoogleLoginPage
                           });
 
                           const json = await result.json();
+                          accessToken = json.accessToken || '';
                           document.getElementById('token').textContent = JSON.stringify(json, null, 2);
+                          document.getElementById('copyToken').disabled = !accessToken;
+                          document.getElementById('copyStatus').textContent = accessToken ? 'Ready to copy.' : '';
+                        }
+
+                        async function copyAccessToken() {
+                          if (!accessToken) {
+                            return;
+                          }
+
+                          if (navigator.clipboard && window.isSecureContext) {
+                            await navigator.clipboard.writeText(accessToken);
+                          } else {
+                            const textArea = document.createElement('textarea');
+                            textArea.value = accessToken;
+                            textArea.style.position = 'fixed';
+                            textArea.style.opacity = '0';
+                            document.body.appendChild(textArea);
+                            textArea.focus();
+                            textArea.select();
+                            document.execCommand('copy');
+                            textArea.remove();
+                          }
+
+                          document.getElementById('copyStatus').textContent = 'Copied.';
                         }
                       </script>
                     </body>
