@@ -2,11 +2,11 @@ namespace CleanApiStarter.Application.Features.Auth;
 
 public sealed class CurrentUserDto
 {
-    public string UserId { get; init; } = string.Empty;
+    public required string UserId { get; init; }
 
-    public string Email { get; init; } = string.Empty;
+    public required string Email { get; init; }
 
-    public string Name { get; init; } = string.Empty;
+    public required string Name { get; init; }
 
     public IReadOnlyCollection<string> Roles { get; init; } = [];
 }

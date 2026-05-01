@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <RootNamespace>CleanApiStarter.Tests</RootNamespace>
+        <PackageId>CleanApiStarter.Tests</PackageId>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" />
+        <PackageReference Include="NSubstitute" />
+        <PackageReference Include="Shouldly" />
+        <PackageReference Include="xunit" />
+    </ItemGroup>
+
+</Project>

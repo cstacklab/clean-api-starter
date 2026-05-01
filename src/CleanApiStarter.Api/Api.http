@@ -1,12 +1,6 @@
 @CleanApiStarter_Api_HostAddress = https://localhost:7285
 @AccessToken = paste-api-jwt-here
 
-GET {{CleanApiStarter_Api_HostAddress}}/api/words?limit=20&offset=0
-Accept: application/json
-Authorization: Bearer {{AccessToken}}
-
-###
-
 POST {{CleanApiStarter_Api_HostAddress}}/api/auth/google
 Content-Type: application/json
 
@@ -16,33 +10,79 @@ Content-Type: application/json
 
 ###
 
-GET {{CleanApiStarter_Api_HostAddress}}/api/auth/me
+GET {{CleanApiStarter_Api_HostAddress}}/api/projects?limit=20&offset=0
 Accept: application/json
 Authorization: Bearer {{AccessToken}}
 
 ###
 
-POST {{CleanApiStarter_Api_HostAddress}}/api/words
+POST {{CleanApiStarter_Api_HostAddress}}/api/projects
 Content-Type: application/json
 Authorization: Bearer {{AccessToken}}
 
 {
-  "text": "observable",
-  "meaning": "Able to be noticed, measured, or monitored.",
-  "synonyms": ["visible", "measurable"],
-  "usageExample": "OpenTelemetry makes API behavior observable."
+  "name": "Clean API Starter",
+  "description": "Template implementation work."
 }
 
 ###
 
-GET {{CleanApiStarter_Api_HostAddress}}/api/words?limit=20&offset=0
+GET {{CleanApiStarter_Api_HostAddress}}/api/projects/00000000-0000-0000-0000-000000000000
+Accept: application/json
+Authorization: Bearer {{AccessToken}}
+
+###
+
+POST {{CleanApiStarter_Api_HostAddress}}/api/projects/00000000-0000-0000-0000-000000000000/tasks
+Content-Type: application/json
+Authorization: Bearer {{AccessToken}}
+
+{
+  "title": "Add observability defaults",
+  "description": "Configure logs, traces, metrics, and request ids.",
+  "dueDate": "2026-12-31T00:00:00Z"
+}
+
+###
+
+GET {{CleanApiStarter_Api_HostAddress}}/api/projects/00000000-0000-0000-0000-000000000000/tasks?limit=20&offset=0&status=Todo
+Accept: application/json
+Authorization: Bearer {{AccessToken}}
+
+###
+
+PUT {{CleanApiStarter_Api_HostAddress}}/api/projects/00000000-0000-0000-0000-000000000000/tasks/00000000-0000-0000-0000-000000000000
+Content-Type: application/json
+Authorization: Bearer {{AccessToken}}
+
+{
+  "title": "Add observability defaults",
+  "description": "Configure logs, traces, metrics, and request ids.",
+  "status": "InProgress",
+  "dueDate": "2026-12-31T00:00:00Z"
+}
+
+###
+
+POST {{CleanApiStarter_Api_HostAddress}}/api/projects/00000000-0000-0000-0000-000000000000/tasks/00000000-0000-0000-0000-000000000000/complete
+Authorization: Bearer {{AccessToken}}
+
+###
+
+GET {{CleanApiStarter_Api_HostAddress}}/api/projects?limit=20&offset=0
 Accept: application/json
 X-Api-Version: 2.0
 Authorization: Bearer {{AccessToken}}
 
 ###
 
-DELETE {{CleanApiStarter_Api_HostAddress}}/api/words/00000000-0000-0000-0000-000000000000
+DELETE {{CleanApiStarter_Api_HostAddress}}/api/projects/00000000-0000-0000-0000-000000000000
+Authorization: Bearer {{AccessToken}}
+
+###
+
+GET {{CleanApiStarter_Api_HostAddress}}/api/auth/me
+Accept: application/json
 Authorization: Bearer {{AccessToken}}
 
 ###

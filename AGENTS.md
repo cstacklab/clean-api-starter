@@ -40,7 +40,11 @@ This repository is a Clean Architecture API starter template named `CleanApiStar
   - `Api` composes `Application`, `Infrastructure`, `Configuration`, and `AspNetCore`.
 - Keep repository interfaces in `Application`, not `Domain`.
 - Keep database implementation details in `Infrastructure`.
-- Keep domain models persistence-agnostic. For example, `Word.Synonyms` stays `List<string>`, even though Postgres stores it as `jsonb`.
+- Keep domain models persistence-agnostic. Persistence mapping details belong in Infrastructure EF Core configuration.
+- Use `required` for non-null required scalar properties on DTOs and domain entities. Do not use `= string.Empty` only to satisfy nullable reference type warnings.
+- Keep collection properties initialized with `= []`.
+- Keep EF navigation properties as `= null!` when EF is responsible for materializing them.
+- Use nullable types such as `string?` or `DateTime?` only for genuinely optional values.
 - Use EF Core through `ApplicationDbContext` for application persistence. Do not reintroduce Dapper for the default template data access path.
 - Keep `ApplicationDbContext` in `CleanApiStarter.Infrastructure/Persistence`, not in `Identity`. The context owns both application entities and Identity storage, so it is a persistence concern.
 - Keep EF Core fluent API entity maps in `CleanApiStarter.Infrastructure/Persistence/Configuration` using `IEntityTypeConfiguration<T>`. Do not put entity mapping logic directly inside `ApplicationDbContext` unless there is a very small one-off reason.
@@ -48,7 +52,7 @@ This repository is a Clean Architecture API starter template named `CleanApiStar
 
 ## API and Application Conventions
 
-- Organize the `Application` project by feature. Put feature-specific contracts, DTOs, and application services under folders such as `Application/Features/Words` or `Application/Features/Auth`.
+- Organize the `Application` project by feature. Put feature-specific contracts, DTOs, and application services under folders such as `Application/Features/Projects` or `Application/Features/Auth`.
 - Do not create generic `Application/Services` or `Application/Models` folders for feature-specific code.
 - Keep cross-cutting application abstractions under `Application/Common`, for example `Application/Common/Interfaces`.
 - Return single resources as their DTO object directly.
@@ -74,11 +78,11 @@ This repository is a Clean Architecture API starter template named `CleanApiStar
 ## Database and Aspire
 
 - Use a single Postgres database: `postgres`.
-- Do not create or reference a separate `wordlibrary` database.
+- Do not create or reference a separate feature-specific database.
 - AppHost should expose the API connection from the `postgres` resource, and application settings should read it through `ConnectionStrings:Postgres`.
 - `docker-compose.yml` should use `POSTGRES_DB=postgres`.
 - Database schema scripts live in `database/migrations`, for example:
-  - `database/migrations/V001__create_words_table.sql`
+  - `database/migrations/V001__create_projects_and_tasks_tables.sql`
 - Do not add API startup database initialization such as `DbInitializer` or DbUp calls. Aspire/Docker init scripts own local schema creation.
 - EF Core is used for application data access and Identity storage, but schema creation still belongs to the SQL scripts in `database/migrations`.
 - Docker Postgres init scripts run only on first volume creation. If scripts need to replay, delete the old volume.
@@ -107,7 +111,7 @@ This repository is a Clean Architecture API starter template named `CleanApiStar
 - Keep OpenTelemetry logs configured to include scopes, formatted messages, and parsed state values so structured message-template properties show up in Aspire.
 - Responses should include `X-Request-ID` with the current trace id, configured centrally in `CleanApiStarter.AspNetCore`.
 - Response compression should be configured centrally in `CleanApiStarter.AspNetCore` with Brotli and gzip providers.
-- Use structured logging message templates instead of interpolated log strings. Prefer stable property names like `{WordId}` and `{WordCount}`.
+- Use structured logging message templates instead of interpolated log strings. Prefer stable property names like `{ProjectId}`, `{TaskId}`, and `{UserId}`.
 - Register root settings once with `AddAppSettings(builder.Configuration)`, then inject `AppSettings` directly when services need configuration values.
 - Do not add generic options registration helpers until the template has multiple real options sections that need them.
 - Do not create a broad `Shared` project. Keep cross-project settings in `CleanApiStarter.Configuration`.
@@ -116,12 +120,12 @@ This repository is a Clean Architecture API starter template named `CleanApiStar
 ## API Style
 
 - Prefer Minimal APIs for this template.
-- Keep `Program.cs` small by placing route groups in endpoint group classes under version folders such as `Api/Endpoints/V1/Words.cs`.
+- Keep `Program.cs` small by placing route groups in endpoint group classes under version folders such as `Api/Endpoints/V1/Projects.cs`.
 - Endpoint group classes should implement `IEndpointGroup` from `CleanApiStarter.AspNetCore` and be mapped through `app.MapEndpoints(Assembly.GetExecutingAssembly());`.
 - Use built-in Minimal API mapping methods with explicit `.WithName(...)`; do not add custom `MapGet`/`MapPost` overloads that shadow framework methods.
 - API versions are selected with the optional `X-Api-Version` request header. Missing versions default to v1.
 - Endpoint groups should declare `MajorVersion` to match their folder, for example `V1` uses `1` and `V2` uses `2`.
-- Endpoint names must be globally unique across versions. Prefer names suffixed with the version, such as `GetWordsV1` and `GetWordsV2`.
+- Endpoint names must be globally unique across versions. Prefer names suffixed with the version, such as `GetProjectsV1` and `GetProjectsV2`.
 - Do not reintroduce MVC controllers unless the template intentionally changes direction.
 
 ## Authentication

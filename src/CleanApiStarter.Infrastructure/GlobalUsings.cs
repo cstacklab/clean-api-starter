@@ -1,11 +1,10 @@
 global using System.IdentityModel.Tokens.Jwt;
 global using System.Security.Claims;
 global using System.Text;
-global using System.Text.Json;
 
 global using CleanApiStarter.Application.Common.Models;
 global using CleanApiStarter.Application.Features.Auth;
-global using CleanApiStarter.Application.Features.Words;
+global using CleanApiStarter.Application.Features.Projects;
 global using CleanApiStarter.Configuration;
 global using CleanApiStarter.Domain.Entities;
 global using CleanApiStarter.Infrastructure.Identity;
