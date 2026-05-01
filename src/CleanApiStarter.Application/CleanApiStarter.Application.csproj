@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <RootNamespace>CleanApiStarter.Application</RootNamespace>
+        <AssemblyName>CleanApiStarter.Application</AssemblyName>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="FluentValidation" />
+        <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
+        <PackageReference Include="Microsoft.Extensions.Hosting" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\CleanApiStarter.Domain\CleanApiStarter.Domain.csproj" />
+    </ItemGroup>
+
+</Project>
