@@ -6,10 +6,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" />
-        <PackageReference Include="NSubstitute" />
-        <PackageReference Include="Shouldly" />
-        <PackageReference Include="xunit" />
+        <PackageReference Include="AutoFixture.AutoNSubstitute" PrivateAssets="all" />
+        <PackageReference Include="AutoFixture.Xunit3" PrivateAssets="all" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
+        <PackageReference Include="Npgsql" />
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" />
+        <PackageReference Include="Testcontainers.PostgreSql" />
     </ItemGroup>
 
 </Project>
