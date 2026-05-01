@@ -41,14 +41,20 @@ public class WordService(IWordRepository wordRepository, ILogger<WordService> lo
         return MapToDto(word);
     }
 
-    public async Task<IEnumerable<WordDto>> GetAllWordsAsync(CancellationToken cancellationToken)
+    public async Task<PaginatedResult<WordDto>> GetWordsAsync(
+        PaginatedQuery query,
+        CancellationToken cancellationToken)
     {
-        IEnumerable<Word> words = await wordRepository.GetAllWordsAsync(cancellationToken);
-        Word[] wordList = words.ToArray();
+        PaginatedResult<Word> words = await wordRepository.GetWordsAsync(query, cancellationToken);
+        PaginatedResult<WordDto> wordDtos = words.Map(MapToDto);
 
-        logger.LogInformation("Retrieved {WordCount} words", wordList.Length);
+        logger.LogInformation(
+            "Retrieved {WordCount} words with limit {Limit} and offset {Offset}",
+            wordDtos.Items.Count,
+            wordDtos.Limit,
+            wordDtos.Offset);
 
-        return wordList.Select(MapToDto);
+        return wordDtos;
     }
 
     public async Task<bool> UpdateWordAsync(Guid id, CreateWordDto wordDto, CancellationToken cancellationToken)

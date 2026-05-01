@@ -4,10 +4,13 @@ global using System.Reflection;
 global using System.Security.Claims;
 global using System.Text.Encodings.Web;
 
+global using Asp.Versioning.ApiExplorer;
+
 global using CleanApiStarter.Api.Endpoints;
 global using CleanApiStarter.Api.Services;
 global using CleanApiStarter.Application;
 global using CleanApiStarter.Application.Common.Interfaces;
+global using CleanApiStarter.Application.Common.Models;
 global using CleanApiStarter.Application.Features.Auth;
 global using CleanApiStarter.Application.Features.Words;
 global using CleanApiStarter.AspNetCore;

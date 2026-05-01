@@ -5,6 +5,9 @@ A Clean Architecture API starter template for .NET, Aspire, PostgreSQL, and Open
 The API uses Minimal APIs with endpoint group classes. `CleanApiStarter.AspNetCore` discovers endpoint groups from the API assembly so `Program.cs` stays small while routes remain easy to find.
 
 API versions are selected with the optional `X-Api-Version` request header. Requests without a version use v1 by default. Endpoint groups live under version folders such as `Endpoints/V1` and `Endpoints/V2`.
+OpenAPI documents are generated per API version and shown in Scalar with a version selector.
+
+Collection endpoints return an `ArrayResult<T>` envelope when they are not paginated. Paginated endpoints accept `limit` and `offset` query parameters and return `PaginatedResult<T>` metadata with the items. Single-resource endpoints return the resource object directly.
 
 ## Authentication
 
@@ -59,6 +62,8 @@ After the dashboard is running, send requests to the API through Scalar or anoth
 
 - Logs show structured application and framework log entries. The word use cases emit fields such as `WordId`, `SynonymCount`, `WordCount`, and `UpdateSucceeded`.
 - Request logs show method, path, response status code, duration, and `UserId` without logging request or response bodies. `CleanApiStarter.AspNetCore` keeps the `Microsoft.AspNetCore.HttpLogging` category at `Information` even when broader ASP.NET Core logs are filtered to `Warning`.
+- Responses include an `X-Request-ID` header containing the current OpenTelemetry trace id, which can be used to correlate API responses with Aspire traces and logs.
+- Responses support Brotli and gzip compression when clients send an `Accept-Encoding` header.
 - Traces show incoming HTTP requests and PostgreSQL commands from Npgsql.
 - Metrics show ASP.NET Core, HTTP client, and .NET runtime measurements.
 - `/version` exposes the running application version.
@@ -71,6 +76,8 @@ Cancellation tokens are explicit at application and infrastructure boundaries. D
 Use structured logging message templates instead of interpolated log strings. Prefer stable property names such as `{WordId}` or `{WordCount}` so Aspire and OpenTelemetry can index and filter them.
 
 Configuration classes live in `CleanApiStarter.Configuration`. Register root settings once with `AddAppSettings(builder.Configuration)`, then inject `AppSettings` directly where configuration values are needed.
+
+Request validation uses FluentValidation. Validators live beside their feature request models in the `Application` project and are executed by a Minimal API endpoint filter from `CleanApiStarter.AspNetCore`. FluentValidation failures return `422 Unprocessable Entity`.
 
 ### Run with Docker Compose Only
 

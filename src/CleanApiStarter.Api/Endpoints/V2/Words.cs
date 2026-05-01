@@ -10,20 +10,26 @@ public sealed class Words : IEndpointGroup
     {
         groupBuilder.RequireAuthorization();
 
-        groupBuilder.MapGet("/", GetAllWords)
-            .WithName("GetAllWordsV2");
+        groupBuilder.MapGet("/", GetWords)
+            .WithName("GetWordsV2");
     }
 
-    private static async Task<IResult> GetAllWords(
+    private static async Task<IResult> GetWords(
+        [AsParameters] PaginatedQuery query,
         IWordService wordService,
         CancellationToken cancellationToken)
     {
-        IEnumerable<WordDto> words = await wordService.GetAllWordsAsync(cancellationToken);
+        PaginatedResult<WordDto> words = await wordService.GetWordsAsync(query, cancellationToken);
 
         return Results.Ok(new
         {
             ApiVersion = "2.0",
-            Items = words
+            words.Items,
+            words.Limit,
+            words.Offset,
+            words.TotalCount,
+            words.HasPreviousPage,
+            words.HasNextPage
         });
     }
 }

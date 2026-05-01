@@ -13,8 +13,8 @@ public sealed class Words : IEndpointGroup
         groupBuilder.MapPost("/", CreateWord)
             .WithName("CreateWordV1");
 
-        groupBuilder.MapGet("/", GetAllWords)
-            .WithName("GetAllWordsV1");
+        groupBuilder.MapGet("/", GetWords)
+            .WithName("GetWordsV1");
 
         groupBuilder.MapGet("/{id:guid}", GetWord)
             .WithName("GetWordV1");
@@ -46,11 +46,12 @@ public sealed class Words : IEndpointGroup
         return word == null ? Results.NotFound() : Results.Ok(word);
     }
 
-    private static async Task<IResult> GetAllWords(
+    private static async Task<IResult> GetWords(
+        [AsParameters] PaginatedQuery query,
         IWordService wordService,
         CancellationToken cancellationToken)
     {
-        IEnumerable<WordDto> words = await wordService.GetAllWordsAsync(cancellationToken);
+        PaginatedResult<WordDto> words = await wordService.GetWordsAsync(query, cancellationToken);
 
         return Results.Ok(words);
     }
