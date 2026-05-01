@@ -9,6 +9,8 @@ OpenAPI documents are generated per API version and shown in Scalar with a versi
 
 Collection endpoints return an `ArrayResult<T>` envelope when they are not paginated. Paginated endpoints accept `limit` and `offset` query parameters and return `PaginatedResult<T>` metadata with the items. Single-resource endpoints return the resource object directly.
 
+The reference feature is project management. Users can create projects, list their projects, manage tasks inside projects, filter tasks by status, and complete tasks. Project membership controls task visibility, and project deletion is owner-only.
+
 ## Authentication
 
 The API validates Google ID tokens and issues its own JWT access token. Google proves the user identity; ASP.NET Core Identity stores local users, roles, and external logins.
@@ -60,7 +62,7 @@ Database scripts live in `database`. Aspire and Docker Compose copy `database/mi
 
 After the dashboard is running, send requests to the API through Scalar or another HTTP client. In the Aspire dashboard:
 
-- Logs show structured application and framework log entries. The word use cases emit fields such as `WordId`, `SynonymCount`, `WordCount`, and `UpdateSucceeded`.
+- Logs show structured application and framework log entries. The project and task use cases emit fields such as `ProjectId`, `TaskId`, `ProjectCount`, and `UserId`.
 - Request logs show method, path, response status code, duration, and `UserId` without logging request or response bodies. `CleanApiStarter.AspNetCore` keeps the `Microsoft.AspNetCore.HttpLogging` category at `Information` even when broader ASP.NET Core logs are filtered to `Warning`.
 - Responses include an `X-Request-ID` header containing the current OpenTelemetry trace id, which can be used to correlate API responses with Aspire traces and logs.
 - Responses support Brotli and gzip compression when clients send an `Accept-Encoding` header.
@@ -73,7 +75,7 @@ After the dashboard is running, send requests to the API through Scalar or anoth
 
 Cancellation tokens are explicit at application and infrastructure boundaries. Do not use `CancellationToken cancellationToken = default` in service or repository contracts. API actions should accept a `CancellationToken` parameter and pass it through the application and repository calls.
 
-Use structured logging message templates instead of interpolated log strings. Prefer stable property names such as `{WordId}` or `{WordCount}` so Aspire and OpenTelemetry can index and filter them.
+Use structured logging message templates instead of interpolated log strings. Prefer stable property names such as `{ProjectId}` or `{TaskId}` so Aspire and OpenTelemetry can index and filter them.
 
 Configuration classes live in `CleanApiStarter.Configuration`. Register root settings once with `AddAppSettings(builder.Configuration)`, then inject `AppSettings` directly where configuration values are needed.
 

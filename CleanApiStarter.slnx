@@ -9,8 +9,9 @@
     <File Path="global.json" />
     <File Path="README.md" />
   </Folder>
+  <Folder Name="/database/" />
   <Folder Name="/database/migrations/">
-    <File Path="database/migrations/V001__create_words_table.sql" />
+    <File Path="database/migrations/V001__create_projects_and_tasks_tables.sql" />
     <File Path="database/migrations/V002__create_identity_tables.sql" />
   </Folder>
   <Folder Name="/src/">
@@ -25,6 +26,8 @@
     <Project Path="src/CleanApiStarter.Configuration/CleanApiStarter.Configuration.csproj" />
   </Folder>
   <Folder Name="/tests/">
-    <Project Path="tests/CleanApiStarter.UnitTests/CleanApiStarter.UnitTests.csproj" />
+    <Project Path="tests/CleanApiStarter.Tests/CleanApiStarter.Tests.csproj" />
+    <Project Path="tests\CleanApiStarter.Api.IntegerationTests\CleanApiStarter.Api.IntegerationTests.csproj" />
+    <Project Path="tests\CleanApiStarter.Application.UnitTests\CleanApiStarter.Application.UnitTests.csproj" />
   </Folder>
 </Solution>

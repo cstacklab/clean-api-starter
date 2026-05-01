@@ -15,7 +15,7 @@ public static class DependencyInjection
             .AddEntityFrameworkStores<ApplicationDbContext>();
 
         services.AddScoped<IAuthService, GoogleAuthService>();
-        services.AddScoped<IWordRepository, WordRepository>();
+        services.AddScoped<IProjectRepository, ProjectRepository>();
 
         return services;
     }

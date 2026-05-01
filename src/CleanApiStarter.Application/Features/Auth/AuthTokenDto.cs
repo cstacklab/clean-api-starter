@@ -2,7 +2,7 @@ namespace CleanApiStarter.Application.Features.Auth;
 
 public sealed class AuthTokenDto
 {
-    public string AccessToken { get; init; } = string.Empty;
+    public required string AccessToken { get; init; }
 
-    public DateTimeOffset ExpiresAt { get; init; }
+    public required DateTimeOffset ExpiresAt { get; init; }
 }

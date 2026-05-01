@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <RootNamespace>CleanApiStarter.UnitTests</RootNamespace>
-        <AssemblyName>CleanApiStarter.UnitTests</AssemblyName>
+        <RootNamespace>CleanApiStarter.Application.UnitTests</RootNamespace>
+        <PackageId>CleanApiStarter.Application.UnitTests</PackageId>
     </PropertyGroup>
 
     <ItemGroup>
