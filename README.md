@@ -26,6 +26,7 @@ The project is intentionally both a template and a working reference application
 - xUnit v3 unit tests with AutoFixture, AutoFixture.AutoNSubstitute, NSubstitute, and Shouldly.
 - MSTest API integration tests with Testcontainers for PostgreSQL.
 - Local coverage script that generates an HTML report with ReportGenerator.
+- GitHub Actions CI with build, test, template verification, and CodeQL security scanning.
 
 ## Solution Layout
 
@@ -74,6 +75,41 @@ The SDK is pinned in `global.json`:
     "rollForward": "latestFeature"
   }
 }
+```
+
+## Use As A Template
+
+Install the template package from NuGet:
+
+```bash
+dotnet new install CleanApiStarter.Template
+```
+
+Create a new solution:
+
+```bash
+dotnet new clean-api-starter -n MyProduct
+```
+
+The template replaces `CleanApiStarter` in solution, project, file, and namespace names. For example, `CleanApiStarter.Api` becomes `MyProduct.Api`.
+
+While developing the template locally, run:
+
+```bash
+scripts/install-template.sh
+```
+
+That script:
+
+- uninstalls the previous local template package
+- packs the current repo with `CleanApiStarter.nuspec`
+- installs the generated local `.nupkg`
+- deletes the temporary package from `artifacts`
+
+Then create a local test solution:
+
+```bash
+dotnet new clean-api-starter -n DemoProduct
 ```
 
 ## Run With Aspire
@@ -474,9 +510,18 @@ artifacts/coverage/report/index.html
 Restore and build:
 
 ```bash
-dotnet restore CleanApiStarter.slnx --disable-parallel
+dotnet restore CleanApiStarter.slnx
 dotnet build CleanApiStarter.slnx --no-restore /nr:false -v:minimal
 ```
+
+## CI
+
+GitHub Actions workflows live in `.github/workflows`:
+
+- `build.yml` restores, builds, and tests the repository on pull requests and pushes to `main`.
+- `codeql.yml` runs CodeQL static security analysis on pull requests, pushes to `main`, and weekly on Monday.
+- `template.yml` packs the template, installs it locally, creates a sample solution, then restores, builds, and tests the generated output.
+- `release.yml` publishes the template to NuGet when a GitHub Release is published with a tag such as `v1.0.0`.
 
 ## Package Management
 

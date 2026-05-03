@@ -146,6 +146,16 @@ This repository is a Clean Architecture API starter template named `CleanApiStar
 - Keep `PackageVersion` items sorted alphabetically by `Include`.
 - Do not add package versions directly in individual `.csproj` files.
 
+## Template Packaging
+
+- This repository is also the `dotnet new` template source.
+- Keep template metadata in `.template.config/template.json`.
+- Keep NuGet template package metadata in `CleanApiStarter.nuspec`.
+- Use `scripts/install-template.sh` to pack and install the local template.
+- Keep repo-only template packaging scripts excluded from generated template output.
+- Keep CodeQL security scanning in `.github/workflows/codeql.yml`, and allow generated projects to inherit it.
+- Keep release publishing triggered by GitHub Release publication with `vX.Y.Z` tags, not manual version inputs.
+
 ## Testing
 
 - Use xUnit v3, AutoFixture.xUnit3, AutoFixture.AutoNSubstitute, NSubstitute, and Shouldly for unit tests.
@@ -163,7 +173,7 @@ This repository is a Clean Architecture API starter template named `CleanApiStar
 - After structural or package changes, run:
 
 ```bash
-dotnet restore CleanApiStarter.slnx --disable-parallel
+dotnet restore CleanApiStarter.slnx
 dotnet build CleanApiStarter.slnx --no-restore /nr:false -v:minimal
 ```
 

@@ -1,0 +1,51 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Chathuranga",
+  "classifications": [
+    "Web",
+    "API",
+    "Clean Architecture",
+    "Aspire",
+    "PostgreSQL",
+    "OpenTelemetry"
+  ],
+  "identity": "CleanApiStarter.Template",
+  "name": "Clean API Starter",
+  "shortName": "clean-api-starter",
+  "sourceName": "CleanApiStarter",
+  "preferNameDirectory": true,
+  "symbols": {
+    "caPackageVersion": {
+      "type": "parameter",
+      "datatype": "text",
+      "defaultValue": "0.0.0",
+      "replaces": "0.0.0"
+    }
+  },
+  "tags": {
+    "language": "C#",
+    "type": "solution"
+  },
+  "sources": [
+    {
+      "modifiers": [
+        {
+          "exclude": [
+            ".git/**",
+            ".idea/**",
+            ".junie/**",
+            ".vs/**",
+            "**/.DS_Store",
+            "**/bin/**",
+            "**/obj/**",
+            "artifacts/**",
+            ".github/workflows/release.yml",
+            ".github/workflows/template.yml",
+            "CleanApiStarter.nuspec",
+            "scripts/install-template.sh"
+          ]
+        }
+      ]
+    }
+  ]
+}
