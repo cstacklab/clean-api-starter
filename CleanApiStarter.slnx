@@ -2,11 +2,18 @@
   <Folder Name="/Solution Items/">
     <File Path=".config/dotnet-tools.json" />
     <File Path=".editorconfig" />
+    <File Path=".github/workflows/build.yml" />
+    <File Path=".github/workflows/codeql.yml" />
+    <File Path=".github/workflows/release.yml" />
+    <File Path=".github/workflows/template.yml" />
     <File Path=".gitignore" />
+    <File Path=".template.config/template.json" />
+    <File Path="CleanApiStarter.nuspec" />
     <File Path="docker-compose.yml" />
     <File Path="Directory.Build.props" />
     <File Path="Directory.Packages.props" />
     <File Path="global.json" />
+    <File Path="LICENSE" />
     <File Path="README.md" />
   </Folder>
   <Folder Name="/database/" />
@@ -24,6 +31,10 @@
     <Project Path="src/CleanApiStarter.AppHost/CleanApiStarter.AppHost.csproj" />
     <Project Path="src/CleanApiStarter.AspNetCore/CleanApiStarter.AspNetCore.csproj" />
     <Project Path="src/CleanApiStarter.Configuration/CleanApiStarter.Configuration.csproj" />
+  </Folder>
+  <Folder Name="/scripts/">
+    <File Path="scripts/install-template.sh" />
+    <File Path="scripts/test-coverage.sh" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/CleanApiStarter.Tests/CleanApiStarter.Tests.csproj" />
