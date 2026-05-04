@@ -1,0 +1,46 @@
+name: Template
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  template:
+    name: Verify template output
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          global-json-file: global.json
+
+      - name: Pack template
+        run: dotnet pack CleanApiStarter.Template.csproj --configuration Release --output artifacts
+
+      - name: Install template
+        run: dotnet new install artifacts/CleanApiStarter.Template.0.0.0.nupkg --force
+
+      - name: Create sample
+        run: dotnet new clean-api-starter -n DemoProduct -o artifacts/DemoProduct
+
+      - name: Restore sample
+        working-directory: artifacts/DemoProduct
+        run: dotnet restore DemoProduct.slnx
+
+      - name: Format sample
+        working-directory: artifacts/DemoProduct
+        run: dotnet format DemoProduct.slnx --verify-no-changes --no-restore
+
+      - name: Build sample
+        working-directory: artifacts/DemoProduct
+        run: dotnet build DemoProduct.slnx --no-restore --configuration Release /nr:false -v:minimal
+
+      - name: Test sample
+        working-directory: artifacts/DemoProduct
+        run: dotnet test DemoProduct.slnx --no-build --configuration Release /nr:false -v:minimal
