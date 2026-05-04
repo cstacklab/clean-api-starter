@@ -150,7 +150,8 @@ This repository is a Clean Architecture API starter template named `CleanApiStar
 
 - This repository is also the `dotnet new` template source.
 - Keep template metadata in `.template.config/template.json`.
-- Keep NuGet template package metadata in `CleanApiStarter.nuspec`.
+- Keep NuGet template package metadata in `CleanApiStarter.Template.csproj`.
+- Use `dotnet pack` and `dotnet nuget push` for template packaging and publishing. Do not use `nuget pack`, `nuget.exe`, or Mono.
 - Use `scripts/install-template.sh` to pack and install the local template.
 - Keep repo-only template packaging scripts excluded from generated template output.
 - Keep CodeQL security scanning in `.github/workflows/codeql.yml`, and allow generated projects to inherit it.

@@ -8,6 +8,6 @@ pkg="$root/artifacts/$name"
 cd "$root"
 
 dotnet new uninstall CleanApiStarter.Template 2>/dev/null || true
-nuget pack "CleanApiStarter.nuspec" -NoDefaultExcludes -OutputDirectory "artifacts"
+dotnet pack "CleanApiStarter.Template.csproj" --configuration Release --output "artifacts"
 dotnet new install "$pkg" --force
 rm -f "$pkg"
