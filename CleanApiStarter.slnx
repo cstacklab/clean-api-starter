@@ -8,7 +8,7 @@
     <File Path=".github/workflows/template.yml" />
     <File Path=".gitignore" />
     <File Path=".template.config/template.json" />
-    <File Path="CleanApiStarter.nuspec" />
+    <File Path="CleanApiStarter.Template.csproj" />
     <File Path="docker-compose.yml" />
     <File Path="Directory.Build.props" />
     <File Path="Directory.Packages.props" />

@@ -21,14 +21,6 @@ jobs:
         with:
           global-json-file: global.json
 
-      - name: Setup NuGet
-        uses: nuget/setup-nuget@v3
-        with:
-          nuget-version: latest
-
-      - name: Install Mono
-        run: sudo apt-get update && sudo apt-get install -y mono-complete
-
       - name: Extract version
         id: version
         run: echo "value=${GITHUB_REF_NAME#v}" >> $GITHUB_OUTPUT
@@ -39,26 +31,10 @@ jobs:
             '.symbols.caPackageVersion.defaultValue = $v' \
             .template.config/template.json > tmp.json && mv tmp.json .template.config/template.json
 
-      - name: Update nuspec release notes
+      - name: Pack template
         env:
           RELEASE_NOTES: ${{ github.event.release.body }}
-        run: |
-          python3 - <<'PY'
-          import os
-          import xml.etree.ElementTree as ET
-
-          ET.register_namespace('', 'http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd')
-
-          tree = ET.parse('CleanApiStarter.nuspec')
-          root = tree.getroot()
-          ns = {'n': 'http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd'}
-
-          root.find('.//n:releaseNotes', ns).text = os.environ.get('RELEASE_NOTES', '')
-          tree.write('CleanApiStarter.nuspec', xml_declaration=True, encoding='utf-8')
-          PY
-
-      - name: Pack template
-        run: nuget pack CleanApiStarter.nuspec -NoDefaultExcludes -OutputDirectory artifacts -Version ${{ steps.version.outputs.value }}
+        run: dotnet pack CleanApiStarter.Template.csproj --configuration Release --output artifacts -p:PackageVersion=${{ steps.version.outputs.value }} -p:PackageReleaseNotes="$RELEASE_NOTES"
 
       - name: Upload package artifact
         uses: actions/upload-artifact@v7
@@ -67,4 +43,4 @@ jobs:
           path: artifacts/*.nupkg
 
       - name: Publish to NuGet
-        run: nuget push artifacts/*.nupkg -Source https://api.nuget.org/v3/index.json -ApiKey ${{ secrets.NUGET_API_KEY }} -SkipDuplicate
+        run: dotnet nuget push artifacts/*.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }} --skip-duplicate

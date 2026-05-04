@@ -102,7 +102,7 @@ scripts/install-template.sh
 That script:
 
 - uninstalls the previous local template package
-- packs the current repo with `CleanApiStarter.nuspec`
+- packs the current repo with `CleanApiStarter.Template.csproj`
 - installs the generated local `.nupkg`
 - deletes the temporary package from `artifacts`
 
