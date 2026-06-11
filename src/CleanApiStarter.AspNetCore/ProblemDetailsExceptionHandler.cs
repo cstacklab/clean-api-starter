@@ -1,12 +1,27 @@
 namespace CleanApiStarter.AspNetCore;
 
-public sealed class ProblemDetailsExceptionHandler(ILogger<ProblemDetailsExceptionHandler> logger) : IExceptionHandler
+public sealed class ProblemDetailsExceptionHandler(
+    IProblemDetailsService problemDetailsService,
+    ILogger<ProblemDetailsExceptionHandler> logger) : IExceptionHandler
 {
     public async ValueTask<bool> TryHandleAsync(
         HttpContext httpContext,
         Exception exception,
         CancellationToken cancellationToken)
     {
+        if (exception is OperationCanceledException && httpContext.RequestAborted.IsCancellationRequested)
+        {
+            logger.LogDebug(
+                "Request {RequestMethod} {RequestPath} was canceled by the client",
+                httpContext.Request.Method,
+                httpContext.Request.Path);
+
+            // 499 Client Closed Request (nginx convention); no body since the client is gone.
+            httpContext.Response.StatusCode = 499;
+
+            return true;
+        }
+
         (int statusCode, ProblemDetails problemDetails) = exception switch
         {
             BadHttpRequestException badRequestException => (
@@ -17,15 +32,6 @@ public sealed class ProblemDetailsExceptionHandler(ILogger<ProblemDetailsExcepti
                     Title = "Bad Request",
                     Type = "https://tools.ietf.org/html/rfc9110#section-15.5.1",
                     Detail = badRequestException.Message
-                }),
-            ArgumentException argumentException => (
-                StatusCodes.Status400BadRequest,
-                new ProblemDetails
-                {
-                    Status = StatusCodes.Status400BadRequest,
-                    Title = "Bad Request",
-                    Type = "https://tools.ietf.org/html/rfc9110#section-15.5.1",
-                    Detail = argumentException.Message
                 }),
             UnauthorizedAccessException => (
                 StatusCodes.Status401Unauthorized,
@@ -65,8 +71,12 @@ public sealed class ProblemDetailsExceptionHandler(ILogger<ProblemDetailsExcepti
         }
 
         httpContext.Response.StatusCode = statusCode;
-        await httpContext.Response.WriteAsJsonAsync(problemDetails, cancellationToken);
 
-        return true;
+        return await problemDetailsService.TryWriteAsync(new ProblemDetailsContext
+        {
+            HttpContext = httpContext,
+            ProblemDetails = problemDetails,
+            Exception = exception
+        });
     }
 }

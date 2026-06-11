@@ -3,13 +3,13 @@ CREATE TABLE IF NOT EXISTS projects (
     name VARCHAR(100) NOT NULL,
     description TEXT NOT NULL,
     owner_user_id VARCHAR(450) NOT NULL,
-    created_at TIMESTAMP NOT NULL
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS project_members (
     project_id UUID NOT NULL,
     user_id VARCHAR(450) NOT NULL,
-    created_at TIMESTAMP NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL,
     CONSTRAINT pk_project_members PRIMARY KEY (project_id, user_id),
     CONSTRAINT fk_project_members_projects_project_id
         FOREIGN KEY (project_id) REFERENCES projects (id) ON DELETE CASCADE
@@ -21,9 +21,9 @@ CREATE TABLE IF NOT EXISTS project_tasks (
     title VARCHAR(150) NOT NULL,
     description TEXT NOT NULL,
     status VARCHAR(20) NOT NULL,
-    due_date TIMESTAMP NULL,
-    created_at TIMESTAMP NOT NULL,
-    completed_at TIMESTAMP NULL,
+    due_date TIMESTAMP WITH TIME ZONE NULL,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    completed_at TIMESTAMP WITH TIME ZONE NULL,
     CONSTRAINT fk_project_tasks_projects_project_id
         FOREIGN KEY (project_id) REFERENCES projects (id) ON DELETE CASCADE
 );

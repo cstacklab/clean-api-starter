@@ -1,33 +1,19 @@
 namespace CleanApiStarter.Api.IntegrationTests.Features.Projects;
 
-[TestClass]
-public sealed class ProjectsTests
+public sealed class ProjectsTests : IClassFixture<ApiApplicationFactory<Program>>
 {
-    private ApiApplicationFactory<Program> _applicationFactory = null!;
+    private readonly HttpClient _client;
 
-    private HttpClient _client = null!;
-
-    [TestInitialize]
-    public async Task TestInitialize()
+    public ProjectsTests(ApiApplicationFactory<Program> applicationFactory)
     {
-        _applicationFactory = new ApiApplicationFactory<Program>();
-        await _applicationFactory.InitializeAsync();
-
-        _client = _applicationFactory.CreateClient();
+        _client = applicationFactory.CreateClient();
 
         _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
             "Bearer",
-            _applicationFactory.CreateAccessToken("integration-test-user"));
+            applicationFactory.CreateAccessToken("integration-test-user"));
     }
 
-    [TestCleanup]
-    public async Task TestCleanup()
-    {
-        _client.Dispose();
-        await _applicationFactory.DisposeAsync();
-    }
-
-    [TestMethod]
+    [Fact]
     public async Task Projects_PostAuthenticatedRequest_CreatesProject()
     {
         // Arrange
@@ -39,17 +25,16 @@ public sealed class ProjectsTests
 
         // Act
         HttpResponseMessage response = await _client.PostAsJsonAsync("/api/projects", request,
-            cancellationToken: TestContext.CancellationToken);
+            cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert
         response.StatusCode.ShouldBe(HttpStatusCode.Created);
 
-        Guid projectId = await response.Content.ReadFromJsonAsync<Guid>();
+        Guid projectId = await response.Content.ReadFromJsonAsync<Guid>(
+            TestContext.Current.CancellationToken);
         projectId.ShouldNotBe(Guid.Empty);
 
         response.Headers.Location.ShouldNotBeNull();
         response.Headers.Location!.ToString().ShouldContain($"/api/projects/{projectId}");
     }
-
-    public TestContext TestContext { get; set; }
 }

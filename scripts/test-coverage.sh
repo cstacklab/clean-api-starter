@@ -44,4 +44,17 @@ dotnet reportgenerator \
 coverage_index="$coverage_report_dir/index.html"
 
 echo "Coverage report: $coverage_index"
-open -a "Google Chrome" "$coverage_index"
+
+case "$(uname -s)" in
+    Darwin)
+        open "$coverage_index"
+        ;;
+    Linux)
+        if command -v xdg-open > /dev/null && [ -n "${DISPLAY:-}${WAYLAND_DISPLAY:-}" ]; then
+            xdg-open "$coverage_index"
+        fi
+        ;;
+    MINGW*|MSYS*|CYGWIN*)
+        cmd.exe //c start "" "$(cygpath -w "$coverage_index")"
+        ;;
+esac

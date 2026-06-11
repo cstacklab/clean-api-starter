@@ -1,19 +1,19 @@
 namespace CleanApiStarter.Tests.Common;
 
-public sealed class ApiApplicationFactory<TProgram> : WebApplicationFactory<TProgram>
+public sealed class ApiApplicationFactory<TProgram> : WebApplicationFactory<TProgram>, IAsyncLifetime
     where TProgram : class
 {
     private const string TestIssuer = "CleanApiStarter.Tests";
     private const string TestAudience = "CleanApiStarter.Api.Tests";
     private const string TestSigningKey = "integration-tests-signing-key-change-me";
 
-    private readonly PostgreSqlContainer postgres = new PostgreSqlBuilder("postgres:latest")
+    private readonly PostgreSqlContainer postgres = new PostgreSqlBuilder("postgres:18")
         .WithDatabase("postgres")
         .WithUsername("postgres")
         .WithPassword("postgres")
         .Build();
 
-    public async Task InitializeAsync()
+    public async ValueTask InitializeAsync()
     {
         await postgres.StartAsync();
         await RunDatabaseScriptsAsync();

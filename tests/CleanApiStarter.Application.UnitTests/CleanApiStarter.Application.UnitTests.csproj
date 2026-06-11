@@ -1,4 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
+    
     <PropertyGroup>
         <RootNamespace>CleanApiStarter.Application.UnitTests</RootNamespace>
         <PackageId>CleanApiStarter.Application.UnitTests</PackageId>
@@ -18,6 +19,10 @@
     <ItemGroup>
       <ProjectReference Include="..\..\src\CleanApiStarter.Application\CleanApiStarter.Application.csproj" />
       <ProjectReference Include="..\CleanApiStarter.Tests\CleanApiStarter.Tests.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <AssemblyAttribute Include="System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute" />
     </ItemGroup>
 
 </Project>

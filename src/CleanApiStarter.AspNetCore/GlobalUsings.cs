@@ -31,6 +31,8 @@ global using Microsoft.IdentityModel.Tokens;
 
 global using Npgsql;
 
+global using Scalar.AspNetCore;
+
 global using OpenTelemetry.Logs;
 global using OpenTelemetry.Metrics;
 global using OpenTelemetry.Trace;

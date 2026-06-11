@@ -4,7 +4,7 @@ string databasePath = Path.GetFullPath(Path.Combine(builder.AppHostDirectory, ".
 string databaseMigrationsPath = Path.Combine(databasePath, "migrations");
 
 IResourceBuilder<PostgresServerResource> postgresServer = builder.AddPostgres("postgres-server")
-    .WithImageTag("latest")
+    .WithImageTag("18")
     .WithVolume("clean-api-starter-postgres-data", "/var/lib/postgresql")
     .WithInitFiles(databaseMigrationsPath)
     .WithPgAdmin();
