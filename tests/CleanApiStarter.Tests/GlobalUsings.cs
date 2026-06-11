@@ -14,3 +14,5 @@ global using Microsoft.IdentityModel.Tokens;
 global using Npgsql;
 
 global using Testcontainers.PostgreSql;
+
+global using Xunit;

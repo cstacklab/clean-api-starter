@@ -12,6 +12,11 @@
         <PackageReference Include="Npgsql" />
         <PackageReference Include="System.IdentityModel.Tokens.Jwt" />
         <PackageReference Include="Testcontainers.PostgreSql" />
+        <PackageReference Include="xunit.v3.extensibility.core" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <AssemblyAttribute Include="System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute" />
     </ItemGroup>
 
 </Project>

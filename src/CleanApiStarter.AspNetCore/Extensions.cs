@@ -26,6 +26,12 @@ public static partial class Extensions
 
     public static WebApplication UseAspNetCoreDefaults(this WebApplication app)
     {
+        if (!app.Environment.IsDevelopment())
+        {
+            app.UseHsts();
+        }
+
+        app.UseHttpsRedirection();
         app.UseMiddleware<RequestIdMiddleware>();
         app.UseExceptionHandler();
         app.UseResponseCompression();
@@ -52,16 +58,17 @@ public static partial class Extensions
                 });
             })
             .WithName("GetVersion")
-            .WithTags("Version");
+            .WithTags("Version")
+            .AllowAnonymous();
 
-        if (app.Environment.IsDevelopment())
+        app.MapHealthChecks("/health")
+            .AllowAnonymous();
+
+        app.MapHealthChecks("/alive", new HealthCheckOptions
         {
-            app.MapHealthChecks("/health");
-            app.MapHealthChecks("/alive", new HealthCheckOptions
-            {
-                Predicate = registration => registration.Tags.Contains("live")
-            });
-        }
+            Predicate = registration => registration.Tags.Contains("live")
+        })
+            .AllowAnonymous();
 
         return app;
     }

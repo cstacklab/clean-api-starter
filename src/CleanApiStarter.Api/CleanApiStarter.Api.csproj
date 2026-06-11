@@ -7,13 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer"/>
-    <PackageReference Include="Asp.Versioning.OpenApi"/>
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi"/>
-    <PackageReference Include="Scalar.AspNetCore"/>
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\CleanApiStarter.Application\CleanApiStarter.Application.csproj" />
     <ProjectReference Include="..\CleanApiStarter.Infrastructure\CleanApiStarter.Infrastructure.csproj" />
     <ProjectReference Include="..\CleanApiStarter.AspNetCore\CleanApiStarter.AspNetCore.csproj" />

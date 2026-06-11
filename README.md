@@ -24,7 +24,7 @@ The project is intentionally both a template and a working reference application
 - FluentValidation endpoint validation returning `422 Unprocessable Entity`.
 - Result wrappers for collection endpoints: `PaginatedResult<T>` and `ArrayResult<T>`.
 - xUnit v3 unit tests with AutoFixture, AutoFixture.AutoNSubstitute, NSubstitute, and Shouldly.
-- MSTest API integration tests with Testcontainers for PostgreSQL.
+- xUnit v3 API integration tests with Testcontainers for PostgreSQL.
 - Local coverage script that generates an HTML report with ReportGenerator.
 - GitHub Actions CI with build, test, template verification, and CodeQL security scanning.
 
@@ -462,7 +462,7 @@ dotnet test tests/CleanApiStarter.Application.UnitTests/CleanApiStarter.Applicat
 
 API integration tests use:
 
-- MSTest
+- xUnit v3
 - Microsoft.AspNetCore.Mvc.Testing
 - Testcontainers for PostgreSQL
 - Shouldly
