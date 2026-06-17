@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <RootNamespace>CleanApiStarter.Api</RootNamespace>
+    <AssemblyName>CleanApiStarter.Api</AssemblyName>
+    <UserSecretsId>clean-api-starter</UserSecretsId>
+    <WarningsAsErrors>NSDEPCOP01</WarningsAsErrors>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
+    <PackageReference Include="Google.Apis.Auth" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" />
+    <PackageReference Include="NsDepCop">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CleanApiStarter.AspNetCore\CleanApiStarter.AspNetCore.csproj" />
+    <ProjectReference Include="..\CleanApiStarter.Configuration\CleanApiStarter.Configuration.csproj" />
+  </ItemGroup>
+
+</Project>

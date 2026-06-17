@@ -8,9 +8,9 @@
     <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
     <NoWarn>$(NoWarn);NU5128</NoWarn>
 
-    <PackageId>CleanApiStarter.Template.Layered</PackageId>
+    <PackageId>CleanApiStarter.Template.Modular</PackageId>
     <Version>0.0.0</Version>
-    <Title>Clean API Starter Template (Layered)</Title>
+    <Title>Clean API Starter Template (Modular)</Title>
     <Authors>Chathuranga</Authors>
     <Description>Clean Architecture API starter template with .NET, Aspire, PostgreSQL, OpenTelemetry, Scalar, JWT authentication, EF Core, and tests.</Description>
     <PackageTags>dotnet-new;template;aspnetcore;api;clean-architecture;aspire;postgresql;opentelemetry;scalar;jwt;efcore</PackageTags>

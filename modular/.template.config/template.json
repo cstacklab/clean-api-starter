@@ -9,9 +9,9 @@
     "PostgreSQL",
     "OpenTelemetry"
   ],
-  "identity": "CleanApiStarter.Template.Layered",
-  "name": "Clean API Starter (Layered)",
-  "shortName": "clean-api-layered",
+  "identity": "CleanApiStarter.Template.Modular",
+  "name": "Clean API Starter (Modular)",
+  "shortName": "clean-api-modular",
   "sourceName": "CleanApiStarter",
   "preferNameDirectory": true,
   "symbols": {
