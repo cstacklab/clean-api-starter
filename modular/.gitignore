@@ -403,3 +403,6 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 .DS_Store
+
+# Synced from the repo-root database/ (single source of truth) by scripts/sync-database.sh
+/database/

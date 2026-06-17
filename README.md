@@ -7,7 +7,7 @@ giving up enforced dependency boundaries in either.
 | Variant | Folder | `dotnet new` | Shape | Boundaries enforced by |
 | --- | --- | --- | --- | --- |
 | **Layered** | [`layered/`](layered/) | `clean-api-layered` | Multi-project (Api, Application, Domain, Infrastructure, …) | Project references (compiler) |
-| **Modular** | `modular/` *(in progress)* | `clean-api-modular` | One business project + reused platform projects | NsDepCop analyzer (build-breaking) |
+| **Modular** | [`modular/`](modular/) | `clean-api-modular` | One business project + reused platform projects | NsDepCop analyzer (build-breaking) |
 
 Both are genuine Clean Architectures — they differ in feature organization and in
 *how* boundaries are enforced, not in whether dependencies point inward. See
@@ -24,11 +24,11 @@ Slice Architecture and the modular monolith.
 
 ## Getting started
 
-Each variant is a self-contained solution. Pick one and read its README:
+Each variant is a self-contained solution. Pick one and read its README
+([layered](layered/README.md), [modular](modular/README.md)):
 
 ```bash
-# Layered (available now)
-cd layered
+cd layered        # or: cd modular
 dotnet build CleanApiStarter.slnx
 ```
 
@@ -36,16 +36,24 @@ To generate a new project from a variant once the templates are published:
 
 ```bash
 dotnet new clean-api-layered -n MyApi
-# dotnet new clean-api-modular -n MyApi   (coming soon)
+dotnet new clean-api-modular -n MyApi
 ```
+
+### Working in the repo
+
+The database schema lives once at the repo root (`database/`) and is synced into
+each variant by `./scripts/sync-database.sh` (run it after cloning and after any
+schema change). See [CONTRIBUTING.md](CONTRIBUTING.md) for the full workflow.
 
 ## Repository layout
 
 ```
 clean-api-starter/
+├── database/migrations/ ← single source of truth, synced into each variant
 ├── docs/architecture/   ← reasoning: Clean Architecture, vertical slices, duplication
+├── scripts/             ← repo-level tooling (database sync)
 ├── layered/             ← variant 1: multi-project template (self-contained)
-├── modular/             ← variant 2: single-project + NsDepCop template (in progress)
+├── modular/             ← variant 2: single-project + NsDepCop template
 ├── CONTRIBUTING.md
 └── LICENSE
 ```

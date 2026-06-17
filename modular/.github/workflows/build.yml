@@ -8,17 +8,8 @@ on:
 
 jobs:
   build:
-    name: Build and test (${{ matrix.variant }})
+    name: Build and test
     runs-on: ubuntu-latest
-
-    strategy:
-      fail-fast: false
-      matrix:
-        variant: [layered, modular]
-
-    defaults:
-      run:
-        working-directory: ${{ matrix.variant }}
 
     steps:
       - name: Checkout
@@ -27,17 +18,10 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v5
         with:
-          global-json-file: ${{ matrix.variant }}/global.json
-
-      - name: Sync database
-        working-directory: ${{ github.workspace }}
-        run: ./scripts/sync-database.sh
+          global-json-file: global.json
 
       - name: Restore
         run: dotnet restore CleanApiStarter.slnx
-
-      - name: Format
-        run: dotnet format CleanApiStarter.slnx --verify-no-changes --no-restore
 
       - name: Build
         run: dotnet build CleanApiStarter.slnx --no-restore --configuration Release /nr:false -v:minimal
