@@ -43,6 +43,7 @@
             ".github/workflows/template.yml",
             "CleanApiStarter.Template.csproj",
             "CONTRIBUTING.md",
+            "docs/**",
             "scripts/install-template.sh"
           ]
         }
