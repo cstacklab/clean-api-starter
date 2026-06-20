@@ -9,8 +9,6 @@ global using Asp.Versioning;
 global using Asp.Versioning.ApiExplorer;
 global using Asp.Versioning.Builder;
 
-global using CleanApiStarter.Configuration;
-
 global using FluentValidation;
 global using FluentValidation.Results;
 

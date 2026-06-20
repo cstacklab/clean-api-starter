@@ -1,13 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <RootNamespace>CleanApiStarter.AspNetCore</RootNamespace>
-    <AssemblyName>CleanApiStarter.AspNetCore</AssemblyName>
+    <RootNamespace>CleanApiStarter.AspNetCoreDefaults</RootNamespace>
+    <AssemblyName>CleanApiStarter.AspNetCoreDefaults</AssemblyName>
   </PropertyGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\CleanApiStarter.Configuration\CleanApiStarter.Configuration.csproj" />
-  </ItemGroup>
 
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />

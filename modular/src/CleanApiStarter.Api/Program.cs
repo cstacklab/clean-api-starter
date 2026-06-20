@@ -3,6 +3,7 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 builder.AddAspNetCoreDefaults();
 
 builder.Services.AddAppSettings(builder.Configuration);
+builder.Services.AddJwtBearerOptions();
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure();
 builder.Services.AddScoped<IUser, CurrentUser>();

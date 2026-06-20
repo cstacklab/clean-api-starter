@@ -1,4 +1,4 @@
-namespace CleanApiStarter.AspNetCore;
+namespace CleanApiStarter.AspNetCoreDefaults;
 
 public static partial class Extensions
 {

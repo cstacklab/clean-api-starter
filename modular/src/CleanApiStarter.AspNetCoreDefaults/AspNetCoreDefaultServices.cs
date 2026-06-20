@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 
-namespace CleanApiStarter.AspNetCore;
+namespace CleanApiStarter.AspNetCoreDefaults;
 
 public static partial class Extensions
 {
@@ -46,23 +46,9 @@ public static partial class Extensions
                 .Build();
         });
 
-        builder.Services.AddOptions<JwtBearerOptions>(JwtBearerDefaults.AuthenticationScheme)
-            .Configure<AppSettings>((options, appSettings) =>
-            {
-                JwtAuthenticationSettings jwtSettings = appSettings.Authentication.Jwt;
-
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuer = true,
-                    ValidIssuer = jwtSettings.Issuer,
-                    ValidateAudience = true,
-                    ValidAudience = jwtSettings.Audience,
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.SigningKey)),
-                    ValidateLifetime = true,
-                    ClockSkew = TimeSpan.FromMinutes(1)
-                };
-            });
+        // The JWT bearer token validation parameters are bound from application
+        // settings by the composition root (the Api project), so these defaults
+        // stay free of any app-specific configuration types.
     }
 
     private static void AddHttpLoggingDefaults(this IHostApplicationBuilder builder)

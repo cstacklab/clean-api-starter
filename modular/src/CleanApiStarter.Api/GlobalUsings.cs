@@ -17,14 +17,17 @@ global using CleanApiStarter.Api.Infrastructure;
 global using CleanApiStarter.Api.Infrastructure.Identity;
 global using CleanApiStarter.Api.Infrastructure.Persistence;
 global using CleanApiStarter.Api.Infrastructure.Repositories;
+global using CleanApiStarter.Api.Configuration;
 global using CleanApiStarter.Api.Services;
-global using CleanApiStarter.AspNetCore;
-global using CleanApiStarter.Configuration;
+global using CleanApiStarter.AspNetCoreDefaults;
 
 global using FluentValidation;
 
 global using Google.Apis.Auth;
 
+global using System.ComponentModel.DataAnnotations;
+
+global using Microsoft.AspNetCore.Authentication.JwtBearer;
 global using Microsoft.AspNetCore.Http;
 global using Microsoft.AspNetCore.Identity;
 global using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -32,6 +35,8 @@ global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.AspNetCore.Routing;
 global using Microsoft.EntityFrameworkCore;
 global using Microsoft.EntityFrameworkCore.Metadata.Builders;
+global using Microsoft.Extensions.Configuration;
 global using Microsoft.Extensions.DependencyInjection;
 global using Microsoft.Extensions.Logging;
+global using Microsoft.Extensions.Options;
 global using Microsoft.IdentityModel.Tokens;

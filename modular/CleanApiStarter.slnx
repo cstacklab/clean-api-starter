@@ -26,8 +26,7 @@
   </Folder>
   <Folder Name="/src/Common/">
     <Project Path="src/CleanApiStarter.AppHost/CleanApiStarter.AppHost.csproj" />
-    <Project Path="src/CleanApiStarter.AspNetCore/CleanApiStarter.AspNetCore.csproj" />
-    <Project Path="src/CleanApiStarter.Configuration/CleanApiStarter.Configuration.csproj" />
+    <Project Path="src/CleanApiStarter.AspNetCoreDefaults/CleanApiStarter.AspNetCoreDefaults.csproj" />
   </Folder>
   <Folder Name="/scripts/">
     <File Path="scripts/install-template.sh" />

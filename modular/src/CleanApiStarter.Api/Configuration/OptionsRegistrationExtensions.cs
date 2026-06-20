@@ -1,4 +1,4 @@
-namespace CleanApiStarter.Configuration;
+namespace CleanApiStarter.Api.Configuration;
 
 public static class OptionsRegistrationExtensions
 {

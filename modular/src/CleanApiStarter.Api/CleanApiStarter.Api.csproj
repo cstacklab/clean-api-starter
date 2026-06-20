@@ -11,6 +11,7 @@
     <PackageReference Include="FluentValidation" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
     <PackageReference Include="Google.Apis.Auth" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" />
@@ -21,8 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CleanApiStarter.AspNetCore\CleanApiStarter.AspNetCore.csproj" />
-    <ProjectReference Include="..\CleanApiStarter.Configuration\CleanApiStarter.Configuration.csproj" />
+    <ProjectReference Include="..\CleanApiStarter.AspNetCoreDefaults\CleanApiStarter.AspNetCoreDefaults.csproj" />
   </ItemGroup>
 
 </Project>
