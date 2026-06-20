@@ -9,13 +9,8 @@ permissions:
 
 jobs:
   publish:
-    name: Publish ${{ matrix.variant }} to NuGet.org
+    name: Publish to NuGet.org
     runs-on: ubuntu-latest
-
-    strategy:
-      fail-fast: false
-      matrix:
-        variant: [layered, modular]
 
     steps:
       - name: Checkout
@@ -24,32 +19,27 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v5
         with:
-          global-json-file: ${{ matrix.variant }}/global.json
+          global-json-file: global.json
 
       - name: Extract version
         id: version
         run: echo "value=${GITHUB_REF_NAME#v}" >> $GITHUB_OUTPUT
 
-      - name: Sync database
-        run: ./scripts/sync-database.sh
-
       - name: Update template version
-        working-directory: ${{ matrix.variant }}
         run: |
           jq --arg v "${{ steps.version.outputs.value }}" \
             '.symbols.caPackageVersion.defaultValue = $v' \
             .template.config/template.json > tmp.json && mv tmp.json .template.config/template.json
 
       - name: Pack template
-        working-directory: ${{ matrix.variant }}
         env:
           RELEASE_NOTES: ${{ github.event.release.body }}
-        run: dotnet pack CleanApiStarter.Template.csproj --configuration Release --output ../artifacts -p:PackageVersion=${{ steps.version.outputs.value }} -p:PackageReleaseNotes="$RELEASE_NOTES"
+        run: dotnet pack CleanApiStarter.Template.csproj --configuration Release --output artifacts -p:PackageVersion=${{ steps.version.outputs.value }} -p:PackageReleaseNotes="$RELEASE_NOTES"
 
       - name: Upload package artifact
         uses: actions/upload-artifact@v7
         with:
-          name: nuget-package-${{ matrix.variant }}
+          name: nuget-package
           path: artifacts/*.nupkg
 
       - name: Publish to NuGet

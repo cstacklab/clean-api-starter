@@ -1,66 +1,102 @@
 # CleanApiStarter
 
-A Clean Architecture API starter for .NET 10, shipped as two `dotnet new`
-template variants so you can pick the structure that fits the project — without
-giving up enforced dependency boundaries in either.
+`CleanApiStarter` is a Clean Architecture API starter for .NET 10, ASP.NET Core
+Minimal APIs, Aspire, PostgreSQL, OpenTelemetry, JWT authentication, API
+versioning, FluentValidation, Scalar, EF Core, and automated tests.
 
-| Variant | Folder | `dotnet new` | Shape | Boundaries enforced by |
-| --- | --- | --- | --- | --- |
-| **Layered** | [`layered/`](layered/) | `clean-api-layered` | Multi-project (Api, Application, Domain, Infrastructure, …) | Project references (compiler) |
-| **Modular** | [`modular/`](modular/) | `clean-api-modular` | One business project + reused platform projects | NsDepCop analyzer (build-breaking) |
+The whole application lives in a single `CleanApiStarter.Api` project, organized by
+feature and layer folders, with the Clean Architecture dependency rule enforced at
+compile time by [NsDepCop](https://github.com/realvizu/NsDepCop) rather than by
+separate projects. The sample domain is project management: authenticated users
+create projects, manage tasks, filter tasks by status, and complete them.
 
-Both are genuine Clean Architectures — they differ in feature organization and in
-*how* boundaries are enforced, not in whether dependencies point inward. See
-[docs/architecture](docs/architecture/clean-architecture-and-vertical-slices.md)
-for the reasoning behind the two variants, including how this relates to Vertical
-Slice Architecture and the modular monolith.
+The reasoning behind this structure — and how it evolved — is recorded in
+[`adr/`](adr/) and [`docs/architecture`](docs/architecture/clean-architecture-and-vertical-slices.md).
 
-## Which one should I use?
+## Features
 
-- **Layered** — when you want hard, physical boundaries and don't mind the
-  ceremony of multiple projects. Violations literally don't compile.
-- **Modular** — for MVPs, smaller services, or teams that want feature-centric
-  organization and less ceremony, with boundaries still enforced at build time.
+- Single application project with feature-centric organization, plus an
+  application-agnostic `AspNetCoreDefaults` project and an Aspire `AppHost`.
+- Compile-time boundary enforcement via NsDepCop (`config.nsdepcop`,
+  `WarningsAsErrors=NSDEPCOP01`): a forbidden dependency fails the build.
+- Minimal APIs organized by endpoint group and API version folders.
+- Header-based API versioning with optional `X-Api-Version`; missing versions default to v1.
+- Versioned OpenAPI documents shown with Scalar.
+- Google ID token sign-in that issues the API's own JWT.
+- ASP.NET Core Identity for local users, roles, and external login storage.
+- Real JWT bearer authentication for protected APIs.
+- EF Core with PostgreSQL for application data and Identity storage.
+- PostgreSQL local development through Aspire or Docker Compose.
+- Database schema scripts under `database/migrations`.
+- OpenTelemetry traces, metrics, and structured logs through Aspire-friendly defaults.
+- HTTP request logging with authenticated user id.
+- `X-Request-ID` response header containing the current trace id.
+- Problem Details exception responses.
+- Response compression with Brotli and gzip.
+- FluentValidation endpoint validation returning `422 Unprocessable Entity`.
+- Result wrappers for collection endpoints: `PaginatedResult<T>` and `ArrayResult<T>`.
+- xUnit v3 unit and Testcontainers-backed integration tests.
+
+## Solution Layout
+
+```text
+CleanApiStarter
+├── database
+│   └── migrations
+├── scripts
+├── src
+│   ├── CleanApiStarter.Api              ← the whole application
+│   │   ├── config.nsdepcop              ← enforced dependency rules
+│   │   ├── Common                       ← shared kernel (paged results, IUser)
+│   │   ├── Domain                       ← entities (no outward dependencies)
+│   │   ├── Features                     ← Auth, Projects (endpoints + handlers + validators)
+│   │   ├── Infrastructure               ← DbContext, EF config, repositories, identity
+│   │   ├── Configuration                ← settings classes + options registration
+│   │   ├── Endpoints, Services          ← composition / web wiring
+│   │   └── Program.cs
+│   └── Common
+│       ├── CleanApiStarter.AppHost            ← Aspire orchestration
+│       └── CleanApiStarter.AspNetCoreDefaults ← reusable, app-agnostic web/runtime defaults
+└── tests
+    ├── CleanApiStarter.Api.IntegrationTests
+    ├── CleanApiStarter.Application.UnitTests
+    └── CleanApiStarter.Tests
+```
+
+Dependency direction (enforced by `config.nsdepcop`):
+
+- `Domain` depends on nothing else in the app — not `Features`, not `Infrastructure`.
+- `Features` (application logic) may not depend on `Infrastructure`; it talks to
+  abstractions that `Infrastructure` implements and DI wires up.
+- `Infrastructure`, `Endpoints`, `Configuration`, and `Program.cs` form the
+  composition root.
+- `AspNetCoreDefaults` is an application-agnostic platform project — it holds no
+  knowledge of the application's settings; the Api binds configuration-dependent
+  options (such as JWT validation) itself.
+
+A violation — for example `using` an `Infrastructure` type from `Domain` — fails
+the build with `error NSDEPCOP01`.
+
+## Requirements
+
+- .NET SDK `10.0.203` or a compatible latest-feature SDK (pinned in `global.json`).
+- Docker Desktop (for integration tests and local PostgreSQL).
 
 ## Getting started
 
-Each variant is a self-contained solution. Pick one and read its README
-([layered](layered/README.md), [modular](modular/README.md)):
+```bash
+dotnet run --project src/CleanApiStarter.AppHost   # API + PostgreSQL via Aspire
+# or
+docker compose up -d && dotnet run --project src/CleanApiStarter.Api
+```
+
+Run the tests with `dotnet test CleanApiStarter.slnx`.
+
+To generate a new project from the published template:
 
 ```bash
-cd layered        # or: cd modular
-dotnet build CleanApiStarter.slnx
+dotnet new clean-api-starter -n MyApi
 ```
-
-To generate a new project from a variant once the templates are published:
-
-```bash
-dotnet new clean-api-layered -n MyApi
-dotnet new clean-api-modular -n MyApi
-```
-
-### Working in the repo
-
-The database schema lives once at the repo root (`database/`) and is synced into
-each variant by `./scripts/sync-database.sh` (run it after cloning and after any
-schema change). See [CONTRIBUTING.md](CONTRIBUTING.md) for the full workflow.
-
-## Repository layout
-
-```
-clean-api-starter/
-├── database/migrations/ ← single source of truth, synced into each variant
-├── docs/architecture/   ← reasoning: Clean Architecture, vertical slices, duplication
-├── scripts/             ← repo-level tooling (database sync)
-├── layered/             ← variant 1: multi-project template (self-contained)
-├── modular/             ← variant 2: single-project + NsDepCop template
-├── CONTRIBUTING.md
-└── LICENSE
-```
-
-Repo-level files (this README, `LICENSE`, `CONTRIBUTING.md`, `docs/`, CI) live at
-the root and are shared across variants. Everything a generated project needs is
-inside the variant folder.
 
 ## Contributing
 

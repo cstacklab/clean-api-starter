@@ -15,13 +15,8 @@ permissions:
 
 jobs:
   analyze:
-    name: Analyze (${{ matrix.variant }})
+    name: Analyze
     runs-on: ubuntu-latest
-
-    strategy:
-      fail-fast: false
-      matrix:
-        variant: [layered, modular]
 
     steps:
       - name: Checkout
@@ -30,7 +25,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v5
         with:
-          global-json-file: ${{ matrix.variant }}/global.json
+          global-json-file: global.json
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v4
@@ -40,11 +35,9 @@ jobs:
           queries: security-extended,security-and-quality
 
       - name: Restore
-        working-directory: ${{ matrix.variant }}
         run: dotnet restore CleanApiStarter.slnx
 
       - name: Build
-        working-directory: ${{ matrix.variant }}
         run: dotnet build CleanApiStarter.slnx --no-restore --configuration Release /nr:false -v:minimal
 
       - name: Analyze

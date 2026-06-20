@@ -1,9 +1,7 @@
 version: 2
 updates:
   - package-ecosystem: nuget
-    directories:
-      - "/layered"
-      - "/modular"
+    directory: "/"
     schedule:
       interval: weekly
     groups:

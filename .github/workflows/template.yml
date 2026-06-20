@@ -8,19 +8,8 @@ on:
 
 jobs:
   template:
-    name: Verify template output (${{ matrix.variant }})
+    name: Verify template output
     runs-on: ubuntu-latest
-
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - variant: layered
-            shortName: clean-api-layered
-            package: CleanApiStarter.Template.Layered
-          - variant: modular
-            shortName: clean-api-modular
-            package: CleanApiStarter.Template.Modular
 
     steps:
       - name: Checkout
@@ -29,20 +18,16 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v5
         with:
-          global-json-file: ${{ matrix.variant }}/global.json
-
-      - name: Sync database
-        run: ./scripts/sync-database.sh
+          global-json-file: global.json
 
       - name: Pack template
-        working-directory: ${{ matrix.variant }}
-        run: dotnet pack CleanApiStarter.Template.csproj --configuration Release --output ../artifacts
+        run: dotnet pack CleanApiStarter.Template.csproj --configuration Release --output artifacts
 
       - name: Install template
-        run: dotnet new install artifacts/${{ matrix.package }}.0.0.0.nupkg --force
+        run: dotnet new install artifacts/CleanApiStarter.Template.0.0.0.nupkg --force
 
       - name: Create sample
-        run: dotnet new ${{ matrix.shortName }} -n DemoProduct -o artifacts/DemoProduct
+        run: dotnet new clean-api-starter -n DemoProduct -o artifacts/DemoProduct
 
       - name: Restore sample
         working-directory: artifacts/DemoProduct
