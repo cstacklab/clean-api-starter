@@ -10,8 +10,27 @@ compile time by [NsDepCop](https://github.com/realvizu/NsDepCop) rather than by
 separate projects. The sample domain is project management: authenticated users
 create projects, manage tasks, filter tasks by status, and complete them.
 
-The reasoning behind this structure — and how it evolved — is recorded in
-[`adr/`](adr/) and [`docs/architecture`](docs/architecture/clean-architecture-and-vertical-slices.md).
+## Architecture in brief
+
+CleanApiStarter treats architecture as three separate decisions rather than one:
+
+- **Feature organization** — *where do I find the code?* Related code for a
+  capability lives together (vertical slices), not scattered across technical
+  folders.
+- **Dependency management** — *what may depend on what?* Clean Architecture is, at
+  its core, about dependency direction: business logic stays free of
+  infrastructure, and dependencies point inward. Here that rule is enforced at
+  build time by an analyzer (NsDepCop) rather than by splitting the app into many
+  projects.
+- **Code reuse** — *is logic consistent across features?* Share what is genuinely
+  shared (the domain model, infrastructure); duplicate only slice-level glue
+  (request/response, validators, handlers) instead of coupling features through the
+  wrong abstraction.
+
+Project count is an implementation detail, not an architectural principle. For the
+full reasoning see
+[docs/architecture](docs/architecture/clean-architecture-and-vertical-slices.md);
+for how the structure evolved, see the [decision records](adr/).
 
 ## Features
 

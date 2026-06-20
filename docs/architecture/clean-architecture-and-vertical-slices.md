@@ -1,14 +1,8 @@
 # Clean Architecture, Vertical Slices, and Duplication
 
-This document records the architectural reasoning behind CleanApiStarter and, in
-particular, why the template ships in two flavors (`layered` and `modular`). It
-exists so that contributors and template users understand *why* the structure is
-the way it is, not just *what* it is.
-
-The thinking here was heavily shaped by a talk from Steve Smith (Ardalis)
-responding to the "is Clean Architecture dead?" debate. A cleaned-up transcript
-of that talk is kept alongside this file in
-[`ardalis-clean-architecture-vsa-transcript.md`](ardalis-clean-architecture-vsa-transcript.md).
+This document records the architectural reasoning behind CleanApiStarter — *why*
+the structure is the way it is, not just *what* it is. The history of how the
+structure evolved is captured in the [architecture decision records](../../adr/).
 
 ## The core idea: three independent decisions
 
@@ -112,17 +106,21 @@ broken. The two variants enforce the same rule with different mechanisms:
   <Disallowed From="CleanApiStarter.Api.Features.*" To="CleanApiStarter.Api.Infrastructure.*" />
   ```
 
-## The two variants in this repo
+## Two ways to enforce the same rule
 
-| | `layered` | `modular` |
+The dependency rule can be enforced two ways, and both are legitimate Clean
+Architectures — they differ only in feature organization and enforcement mechanism,
+not in whether they respect dependency direction:
+
+| | Multi-project | Single project |
 | --- | --- | --- |
-| Shape | Multi-project (Api, Application, Domain, Infrastructure, …) | One business project (`Api`) + reused platform projects (`AspNetCore`, `Configuration`) + `AppHost` |
+| Shape | A project per layer (Api, Application, Domain, Infrastructure, …) | One application project organized by feature folders |
 | Feature organization | Feature folders inside layered projects | Vertical slices in `Features/` |
-| Enforcement | Project references (compiler) | NsDepCop (analyzer, build-breaking) |
-| Best for | Teams who want hard, physical boundaries | MVPs, smaller apps, less ceremony, feature-centric work |
+| Enforcement | Project references (compiler) | Namespace analyzer, build-breaking |
+| Best for | Teams who want hard, physical boundaries | Smaller apps, less ceremony, feature-centric work |
 
-Both are legitimate Clean Architectures — they differ in feature organization and
-enforcement mechanism, not in whether they respect dependency direction.
+CleanApiStarter uses the single-project approach; see the
+[decision records](../../adr/) for how it arrived there.
 
 ## Where this is heading: the modular monolith
 
@@ -136,8 +134,8 @@ Modules.Billing.Internal.*`).
 
 This gives much of the modularity and independence people reach microservices for
 — autonomy, encapsulation, clear contracts — without the operational tax of a
-distributed system. The `modular` variant is intentionally a stepping stone in
-this direction: its `Features/` layout can grow into `Modules/` over time.
+distributed system. The single-project layout here is intentionally a stepping
+stone in this direction: its `Features/` layout can grow into `Modules/` over time.
 
 ## Summary
 
@@ -146,14 +144,6 @@ this direction: its `Features/` layout can grow into `Modules/` over time.
 - Project count is an implementation detail, not an architectural principle.
 - Duplicate slice-level glue freely; never duplicate domain rules or
   infrastructure.
-- Enforce boundaries with something that breaks the build — project references
-  (`layered`) or NsDepCop (`modular`).
+- Enforce boundaries with something that breaks the build — a namespace analyzer
+  (used here) or project references.
 - The modular monolith is the long-term target for serious business apps.
-
-## Source
-
-Steve Smith (Ardalis), talk on Clean Architecture vs. Vertical Slice
-Architecture (responding to Nick Chapsas). See the transcript in
-[`ardalis-clean-architecture-vsa-transcript.md`](ardalis-clean-architecture-vsa-transcript.md).
-Prefer linking to the original video over redistributing the transcript; see the
-attribution note in that file.
