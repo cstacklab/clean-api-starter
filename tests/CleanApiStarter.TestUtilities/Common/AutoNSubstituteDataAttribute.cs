@@ -1,4 +1,4 @@
-namespace CleanApiStarter.Tests.Common;
+namespace CleanApiStarter.TestUtilities.Common;
 
 public sealed class AutoNSubstituteDataAttribute() : AutoDataAttribute(CreateFixture)
 {

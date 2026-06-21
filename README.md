@@ -78,9 +78,9 @@ CleanApiStarter
 │       ├── CleanApiStarter.AppHost            ← Aspire orchestration
 │       └── CleanApiStarter.AspNetCoreDefaults ← reusable, app-agnostic web/runtime defaults
 └── tests
-    ├── CleanApiStarter.Api.IntegrationTests
-    ├── CleanApiStarter.Application.UnitTests
-    └── CleanApiStarter.Tests
+    ├── CleanApiStarter.UnitTests
+    ├── CleanApiStarter.IntegrationTests
+    └── CleanApiStarter.TestUtilities       ← shared test factory + attributes
 ```
 
 Dependency direction (enforced by `config.nsdepcop`):

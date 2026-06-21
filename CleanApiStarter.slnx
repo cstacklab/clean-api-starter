@@ -38,8 +38,8 @@
     <Project Path="src/CleanApiStarter.AspNetCoreDefaults/CleanApiStarter.AspNetCoreDefaults.csproj" />
   </Folder>
   <Folder Name="/tests/">
-    <Project Path="tests/CleanApiStarter.Tests/CleanApiStarter.Tests.csproj" />
-    <Project Path="tests/CleanApiStarter.Api.IntegrationTests/CleanApiStarter.Api.IntegrationTests.csproj" />
-    <Project Path="tests/CleanApiStarter.Application.UnitTests/CleanApiStarter.Application.UnitTests.csproj" />
+    <Project Path="tests/CleanApiStarter.TestUtilities/CleanApiStarter.TestUtilities.csproj" />
+    <Project Path="tests/CleanApiStarter.IntegrationTests/CleanApiStarter.IntegrationTests.csproj" />
+    <Project Path="tests/CleanApiStarter.UnitTests/CleanApiStarter.UnitTests.csproj" />
   </Folder>
 </Solution>

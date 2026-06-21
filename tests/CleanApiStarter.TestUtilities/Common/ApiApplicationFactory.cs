@@ -1,4 +1,4 @@
-namespace CleanApiStarter.Tests.Common;
+namespace CleanApiStarter.TestUtilities.Common;
 
 public sealed class ApiApplicationFactory<TProgram> : WebApplicationFactory<TProgram>, IAsyncLifetime
     where TProgram : class

@@ -1,4 +1,4 @@
-namespace CleanApiStarter.Api.IntegrationTests.Features.Projects;
+namespace CleanApiStarter.IntegrationTests.Features.Projects;
 
 public sealed class ProjectsTests : IClassFixture<ApiApplicationFactory<Program>>
 {

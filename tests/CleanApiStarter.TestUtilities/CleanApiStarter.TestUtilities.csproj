@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <RootNamespace>CleanApiStarter.Tests</RootNamespace>
-        <PackageId>CleanApiStarter.Tests</PackageId>
+        <RootNamespace>CleanApiStarter.TestUtilities</RootNamespace>
+        <PackageId>CleanApiStarter.TestUtilities</PackageId>
     </PropertyGroup>
 
     <ItemGroup>

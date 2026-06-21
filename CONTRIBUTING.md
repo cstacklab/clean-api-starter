@@ -61,12 +61,12 @@ The same checks run on every PR ([build.yml](.github/workflows/build.yml),
 
 ## Tests
 
-- Unit tests: `tests/CleanApiStarter.Application.UnitTests` (xUnit v3, AutoFixture,
+- Unit tests: `tests/CleanApiStarter.UnitTests` (xUnit v3, AutoFixture,
   NSubstitute, Shouldly).
-- Integration tests: `tests/CleanApiStarter.Api.IntegrationTests` (xUnit v3
+- Integration tests: `tests/CleanApiStarter.IntegrationTests` (xUnit v3
   against a real PostgreSQL container; Docker must be running).
 - Shared test infrastructure (the `ApiApplicationFactory` class fixture) lives in
-  `tests/CleanApiStarter.Tests`.
+  `tests/CleanApiStarter.TestUtilities`.
 
 New behavior needs tests. The integration test factory is an `IClassFixture`, so
 all tests in a class share one database — isolate through unique user ids or
