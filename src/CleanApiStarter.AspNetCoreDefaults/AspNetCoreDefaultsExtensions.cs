@@ -1,6 +1,6 @@
 namespace CleanApiStarter.AspNetCoreDefaults;
 
-public static partial class Extensions
+public static partial class AspNetCoreDefaultsExtensions
 {
     public static WebApplicationBuilder AddAspNetCoreDefaults(this WebApplicationBuilder builder)
     {
@@ -46,7 +46,7 @@ public static partial class Extensions
     {
         app.MapGet("/version", () =>
             {
-                Assembly assembly = Assembly.GetEntryAssembly() ?? typeof(Extensions).Assembly;
+                Assembly assembly = Assembly.GetEntryAssembly() ?? typeof(AspNetCoreDefaultsExtensions).Assembly;
                 AssemblyInformationalVersionAttribute? informationalVersion = assembly
                     .GetCustomAttribute<AssemblyInformationalVersionAttribute>();
 

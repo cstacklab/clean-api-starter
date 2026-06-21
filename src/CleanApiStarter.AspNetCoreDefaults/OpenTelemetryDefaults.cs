@@ -1,6 +1,6 @@
 namespace CleanApiStarter.AspNetCoreDefaults;
 
-public static partial class Extensions
+public static partial class AspNetCoreDefaultsExtensions
 {
     private static IHostApplicationBuilder ConfigureOpenTelemetry(this IHostApplicationBuilder builder)
     {

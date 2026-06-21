@@ -1,6 +1,6 @@
 namespace CleanApiStarter.Api.Infrastructure;
 
-public static class InfrastructureServiceCollectionExtensions
+public static class InfrastructureExtensions
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services)
     {
