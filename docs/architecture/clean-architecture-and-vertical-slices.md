@@ -86,25 +86,18 @@ defined once.
 ## How the boundaries are enforced
 
 Dependency rules are only real if something *fails the build* when they are
-broken. The two variants enforce the same rule with different mechanisms:
+broken. CleanApiStarter enforces them with **[NsDepCop](https://github.com/realvizu/NsDepCop)**,
+a Roslyn analyzer that polices *namespace* dependencies at compile time. A
+declarative `config.nsdepcop` lists the illegal directions, and
+`<WarningsAsErrors>NSDEPCOP01</WarningsAsErrors>` in the csproj turns a violation
+into a build-breaking error — recreating inside a single project the guarantee
+that separate projects would otherwise give through project references. The
+ruleset is default-allow, then blacklists the inward-violating directions:
 
-- **`layered` (multi-project):** enforced by **project references**. `Domain`
-  has no reference to `Infrastructure`, so a violating `using` simply does not
-  compile. This is the strongest possible enforcement and comes "for free" from
-  the project graph — at the cost of more projects and more ceremony.
-
-- **`modular` (single app project):** enforced by **[NsDepCop](https://github.com/realvizu/NsDepCop)**,
-  a Roslyn analyzer that polices *namespace* dependencies at compile time. A
-  declarative `config.nsdepcop` lists illegal directions, and
-  `<WarningsAsErrors>NSDEPCOP01</WarningsAsErrors>` in the csproj turns a
-  violation into a build-breaking error. This recreates the layered guarantee
-  inside one project. The ruleset is default-allow, then blacklists the few
-  inward-violating directions:
-
-  ```xml
-  <Disallowed From="CleanApiStarter.Api.Domain.*"   To="CleanApiStarter.Api.Infrastructure.*" />
-  <Disallowed From="CleanApiStarter.Api.Features.*" To="CleanApiStarter.Api.Infrastructure.*" />
-  ```
+```xml
+<Disallowed From="CleanApiStarter.Api.Domain.*"   To="CleanApiStarter.Api.Infrastructure.*" />
+<Disallowed From="CleanApiStarter.Api.Features.*" To="CleanApiStarter.Api.Infrastructure.*" />
+```
 
 ## Two ways to enforce the same rule
 
