@@ -38,6 +38,7 @@
             "**/.DS_Store",
             "**/bin/**",
             "**/obj/**",
+            ".claude/settings.local.json",
             "artifacts/**",
             ".github/workflows/release.yml",
             ".github/workflows/template.yml",

@@ -39,8 +39,10 @@ Alternatively, start PostgreSQL with `docker compose up -d` and run
 2. Keep changes focused; unrelated refactoring belongs in its own PR.
 3. Open a pull request against `main`. CI must pass before review.
 
-For step-by-step recipes (add an endpoint, a feature, or a migration), see
-[SKILLS.md](SKILLS.md).
+Working in Claude Code? This repo ships project skills in
+[`.claude/skills/`](.claude/skills/) — run `/add-endpoint` or `/add-migration`
+(or let Claude apply them automatically) for step-by-step, convention-correct
+recipes.
 
 ### What CI enforces
 
