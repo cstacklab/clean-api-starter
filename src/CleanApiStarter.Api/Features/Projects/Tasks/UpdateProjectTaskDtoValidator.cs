@@ -1,4 +1,4 @@
-namespace CleanApiStarter.Api.Features.Projects;
+namespace CleanApiStarter.Api.Features.Projects.Tasks;
 
 public sealed class UpdateProjectTaskDtoValidator : AbstractValidator<UpdateProjectTaskDto>
 {
