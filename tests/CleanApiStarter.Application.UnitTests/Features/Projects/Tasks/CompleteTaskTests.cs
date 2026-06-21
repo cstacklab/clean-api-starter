@@ -1,4 +1,4 @@
-namespace CleanApiStarter.Api.UnitTests.Features.Projects.Tasks;
+namespace CleanApiStarter.Application.UnitTests.Features.Projects.Tasks;
 
 public sealed class CompleteTaskTests
 {

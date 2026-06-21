@@ -4,7 +4,7 @@ builder.AddAspNetCoreDefaults();
 
 builder.Services.AddAppSettings(builder.Configuration);
 builder.Services.AddJwtBearerOptions();
-builder.Services.AddApplication();
+builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 builder.Services.AddInfrastructure();
 builder.Services.AddScoped<IUser, CurrentUser>();
 
