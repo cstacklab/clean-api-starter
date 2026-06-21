@@ -1,4 +1,4 @@
-namespace CleanApiStarter.Api.Endpoints.V1;
+namespace CleanApiStarter.Api.Features.Auth;
 
 public sealed class Auth : IEndpointGroup
 {

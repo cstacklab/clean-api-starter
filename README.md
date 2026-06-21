@@ -68,10 +68,10 @@ CleanApiStarter
 │   │   ├── config.nsdepcop              ← enforced dependency rules
 │   │   ├── Common                       ← shared kernel (paged results, IUser)
 │   │   ├── Domain                       ← entities (no outward dependencies)
-│   │   ├── Features                     ← Auth, Projects (endpoints + handlers + validators)
+│   │   ├── Features                     ← Auth, Projects/Tasks (endpoints + DTOs + validators per feature)
 │   │   ├── Infrastructure               ← DbContext, EF config, repositories, identity
 │   │   ├── Configuration                ← settings classes + options registration
-│   │   ├── Endpoints, Services          ← composition / web wiring
+│   │   ├── Services                     ← composition / web wiring (CurrentUser)
 │   │   └── Program.cs
 │   └── Common
 │       ├── CleanApiStarter.AppHost            ← Aspire orchestration

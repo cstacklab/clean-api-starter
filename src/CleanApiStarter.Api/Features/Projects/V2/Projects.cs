@@ -1,4 +1,4 @@
-namespace CleanApiStarter.Api.Endpoints.V2;
+namespace CleanApiStarter.Api.Features.Projects.V2;
 
 public sealed class Projects : IEndpointGroup
 {

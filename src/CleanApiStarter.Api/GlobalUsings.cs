@@ -12,7 +12,6 @@ global using CleanApiStarter.Api.Common.Interfaces;
 global using CleanApiStarter.Api.Common.Models;
 global using CleanApiStarter.Api.Configuration;
 global using CleanApiStarter.Api.Domain.Entities;
-global using CleanApiStarter.Api.Endpoints;
 global using CleanApiStarter.Api.Features.Auth;
 global using CleanApiStarter.Api.Features.Projects;
 global using CleanApiStarter.Api.Features.Projects.Tasks;

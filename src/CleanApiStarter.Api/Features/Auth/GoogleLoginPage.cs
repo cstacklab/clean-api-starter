@@ -1,4 +1,4 @@
-namespace CleanApiStarter.Api.Endpoints;
+namespace CleanApiStarter.Api.Features.Auth;
 
 public static class GoogleLoginPage
 {
