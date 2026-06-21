@@ -68,7 +68,8 @@ CleanApiStarter
 │   │   ├── config.nsdepcop              ← enforced dependency rules
 │   │   ├── Common                       ← shared kernel (paged results, IUser)
 │   │   ├── Domain                       ← entities (no outward dependencies)
-│   │   ├── Features                     ← Auth, Projects/Tasks (endpoints + DTOs + validators per feature)
+│   │   ├── Features                     ← Auth, Projects/Tasks — one file per operation
+│   │   │                                   (endpoint + request + validator + handler)
 │   │   ├── Infrastructure               ← DbContext, EF config, repositories, identity
 │   │   ├── Configuration                ← settings classes + options registration
 │   │   ├── Services                     ← composition / web wiring (CurrentUser)
@@ -85,9 +86,11 @@ CleanApiStarter
 Dependency direction (enforced by `config.nsdepcop`):
 
 - `Domain` depends on nothing else in the app — not `Features`, not `Infrastructure`.
-- `Features` (application logic) may not depend on `Infrastructure`; it talks to
-  abstractions that `Infrastructure` implements and DI wires up.
-- `Infrastructure`, `Endpoints`, `Configuration`, and `Program.cs` form the
+- `Features` holds one self-contained slice per operation (endpoint + request +
+  validator + handler). A handler may not depend on `Infrastructure`; it talks to
+  abstractions (`IProjectRepository`, `IAuthService`) that `Infrastructure`
+  implements and DI wires up.
+- `Infrastructure`, `Configuration`, `Services`, and `Program.cs` form the
   composition root.
 - `AspNetCoreDefaults` is an application-agnostic platform project — it holds no
   knowledge of the application's settings; the Api binds configuration-dependent
