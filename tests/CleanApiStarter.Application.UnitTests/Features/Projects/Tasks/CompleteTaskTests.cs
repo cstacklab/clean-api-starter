@@ -1,16 +1,15 @@
-namespace CleanApiStarter.Api.UnitTests.Features.Projects;
+namespace CleanApiStarter.Api.UnitTests.Features.Projects.Tasks;
 
-public sealed class ProjectServiceTests
+public sealed class CompleteTaskTests
 {
     [Theory]
     [AutoNSubstituteData]
-    public async Task CompleteTaskAsync_TaskIsAlreadyCompleted_ReturnsAlreadyCompleted(
+    public async Task Handle_TaskIsAlreadyCompleted_ReturnsConflictAndDoesNotSave(
         Guid projectId,
         Guid taskId,
         string userId,
         [Frozen] IUser currentUser,
-        [Frozen] IProjectRepository projectRepository,
-        ProjectService sut)
+        [Frozen] IProjectRepository projectRepository)
     {
         // Arrange
         CancellationToken cancellationToken = CancellationToken.None;
@@ -31,10 +30,10 @@ public sealed class ProjectServiceTests
             .Returns(Task.FromResult<ProjectTask?>(task));
 
         // Act
-        ProjectTaskMutationResult result = await sut.CompleteTaskAsync(projectId, taskId, cancellationToken);
+        IResult result = await CompleteTask.Handle(projectId, taskId, projectRepository, currentUser, cancellationToken);
 
         // Assert
-        result.ShouldBe(ProjectTaskMutationResult.AlreadyCompleted);
+        result.ShouldBeOfType<Conflict<string>>();
         _ = projectRepository.DidNotReceive().SaveChangesAsync(Arg.Any<CancellationToken>());
     }
 }

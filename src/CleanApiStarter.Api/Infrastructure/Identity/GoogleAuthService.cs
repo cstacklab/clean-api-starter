@@ -8,9 +8,9 @@ public sealed class GoogleAuthService(
     private const string GoogleLoginProvider = "Google";
     private const string DefaultRole = "User";
 
-    public async Task<AuthTokenDto> SignInWithGoogleAsync(GoogleSignInDto signInDto, CancellationToken cancellationToken)
+    public async Task<AuthTokenDto> SignInWithGoogleAsync(string idToken, CancellationToken cancellationToken)
     {
-        GoogleJsonWebSignature.Payload payload = await ValidateGoogleTokenAsync(signInDto.IdToken);
+        GoogleJsonWebSignature.Payload payload = await ValidateGoogleTokenAsync(idToken);
         ApplicationUser user = await FindOrCreateUserAsync(payload, cancellationToken);
         IList<string> roles = await userManager.GetRolesAsync(user);
         DateTimeOffset expiresAt = DateTimeOffset.UtcNow.AddMinutes(appSettings.Authentication.Jwt.ExpirationMinutes);

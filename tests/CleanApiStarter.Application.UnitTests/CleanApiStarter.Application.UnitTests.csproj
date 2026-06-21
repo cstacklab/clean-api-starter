@@ -17,6 +17,10 @@
     </ItemGroup>
 
     <ItemGroup>
+        <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    </ItemGroup>
+
+    <ItemGroup>
       <ProjectReference Include="..\..\src\CleanApiStarter.Api\CleanApiStarter.Api.csproj" />
       <ProjectReference Include="..\CleanApiStarter.Tests\CleanApiStarter.Tests.csproj" />
     </ItemGroup>
