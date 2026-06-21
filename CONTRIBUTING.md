@@ -39,6 +39,9 @@ Alternatively, start PostgreSQL with `docker compose up -d` and run
 2. Keep changes focused; unrelated refactoring belongs in its own PR.
 3. Open a pull request against `main`. CI must pass before review.
 
+For step-by-step recipes (add an endpoint, a feature, or a migration), see
+[SKILLS.md](SKILLS.md).
+
 ### What CI enforces
 
 The same checks run on every PR ([build.yml](.github/workflows/build.yml),
