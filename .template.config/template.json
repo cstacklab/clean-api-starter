@@ -38,11 +38,14 @@
             "**/.DS_Store",
             "**/bin/**",
             "**/obj/**",
+            ".claude/settings.local.json",
             "artifacts/**",
             ".github/workflows/release.yml",
             ".github/workflows/template.yml",
             "CleanApiStarter.Template.csproj",
             "CONTRIBUTING.md",
+            "adr/**",
+            "docs/**",
             "scripts/install-template.sh"
           ]
         }

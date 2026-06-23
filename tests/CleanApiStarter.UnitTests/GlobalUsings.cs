@@ -1,0 +1,16 @@
+global using AutoFixture.Xunit3;
+
+global using CleanApiStarter.Api.Common.Interfaces;
+global using CleanApiStarter.Api.Domain.Entities;
+global using CleanApiStarter.Api.Features.Projects;
+global using CleanApiStarter.Api.Features.Projects.Tasks;
+global using CleanApiStarter.TestUtilities.Common;
+
+global using Microsoft.AspNetCore.Http;
+global using Microsoft.AspNetCore.Http.HttpResults;
+
+global using NSubstitute;
+
+global using Shouldly;
+
+global using Xunit;
