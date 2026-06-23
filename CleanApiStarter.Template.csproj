@@ -24,7 +24,7 @@
     <None Include="README.md" Pack="true" PackagePath="" />
     <Content
       Include="**/*"
-      Exclude=".git/**/*;.idea/**/*;.junie/**/*;.vs/**/*;**/bin/**/*;**/obj/**/*;artifacts/**/*;**/.DS_Store;CleanApiStarter.Template.csproj;scripts/install-template.sh;.github/workflows/release.yml;.github/workflows/template.yml;*.nupkg"
+      Exclude=".git/**/*;.idea/**/*;.junie/**/*;.vs/**/*;**/bin/**/*;**/obj/**/*;artifacts/**/*;**/.DS_Store;.claude/settings.local.json;CleanApiStarter.Template.csproj;scripts/install-template.sh;.github/workflows/release.yml;.github/workflows/template.yml;adr/**/*;docs/**/*;CONTRIBUTING.md;*.nupkg"
       Pack="true"
       PackagePath="content/%(Identity)" />
   </ItemGroup>

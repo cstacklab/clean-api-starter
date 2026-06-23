@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<NsDepCopConfig>
+    <!-- Default: allow everything, then forbid the directions that would break
+         Clean Architecture's inward dependency rule. Violations break the build
+         (WarningsAsErrors=NSDEPCOP01 in the csproj). -->
+    <Allowed From="*" To="*" />
+
+    <!-- Domain is the innermost layer: it may not depend on application or infrastructure. -->
+    <Disallowed From="CleanApiStarter.Api.Domain.*" To="CleanApiStarter.Api.Features.*" />
+    <Disallowed From="CleanApiStarter.Api.Domain.*" To="CleanApiStarter.Api.Infrastructure.*" />
+
+    <!-- Application (features) may not depend on infrastructure; it talks to abstractions. -->
+    <Disallowed From="CleanApiStarter.Api.Features.*" To="CleanApiStarter.Api.Infrastructure.*" />
+
+    <AnalyzerConfig>
+        <IssueKind Name="IllegalDependency" Severity="Error" />
+    </AnalyzerConfig>
+</NsDepCopConfig>

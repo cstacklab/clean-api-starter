@@ -403,3 +403,6 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 .DS_Store
+
+# Claude Code local settings (skills under .claude/skills/ are tracked)
+.claude/settings.local.json

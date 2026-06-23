@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <RootNamespace>CleanApiStarter.TestUtilities</RootNamespace>
+        <PackageId>CleanApiStarter.TestUtilities</PackageId>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="AutoFixture.AutoNSubstitute" PrivateAssets="all" />
+        <PackageReference Include="AutoFixture.Xunit3" PrivateAssets="all" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
+        <PackageReference Include="Npgsql" />
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" />
+        <PackageReference Include="Testcontainers.PostgreSql" />
+        <PackageReference Include="xunit.v3.extensibility.core" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <AssemblyAttribute Include="System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute" />
+    </ItemGroup>
+
+</Project>

@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    
+    <PropertyGroup>
+        <RootNamespace>CleanApiStarter.UnitTests</RootNamespace>
+        <PackageId>CleanApiStarter.UnitTests</PackageId>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="AutoFixture.AutoNSubstitute" />
+        <PackageReference Include="AutoFixture.Xunit3" />
+        <PackageReference Include="coverlet.collector" PrivateAssets="all" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" />
+        <PackageReference Include="NSubstitute" />
+        <PackageReference Include="Shouldly" />
+        <PackageReference Include="xunit.runner.visualstudio" PrivateAssets="all" />
+        <PackageReference Include="xunit.v3" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\src\CleanApiStarter.Api\CleanApiStarter.Api.csproj" />
+      <ProjectReference Include="..\CleanApiStarter.TestUtilities\CleanApiStarter.TestUtilities.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <AssemblyAttribute Include="System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute" />
+    </ItemGroup>
+
+</Project>
