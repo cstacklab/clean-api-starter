@@ -3,7 +3,6 @@ global using System.IdentityModel.Tokens.Jwt;
 global using System.IO.Compression;
 global using System.Reflection;
 global using System.Security.Claims;
-global using System.Text;
 
 global using Asp.Versioning;
 global using Asp.Versioning.ApiExplorer;
@@ -25,7 +24,6 @@ global using Microsoft.Extensions.DependencyInjection;
 global using Microsoft.Extensions.Diagnostics.HealthChecks;
 global using Microsoft.Extensions.Hosting;
 global using Microsoft.Extensions.Logging;
-global using Microsoft.IdentityModel.Tokens;
 
 global using Npgsql;
 

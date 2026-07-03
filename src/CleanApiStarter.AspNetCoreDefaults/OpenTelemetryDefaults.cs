@@ -2,7 +2,7 @@ namespace CleanApiStarter.AspNetCoreDefaults;
 
 public static partial class AspNetCoreDefaultsExtensions
 {
-    private static IHostApplicationBuilder ConfigureOpenTelemetry(this IHostApplicationBuilder builder)
+    private static void ConfigureOpenTelemetry(this IHostApplicationBuilder builder)
     {
         builder.Logging.AddOpenTelemetry(logging =>
         {
@@ -35,7 +35,5 @@ public static partial class AspNetCoreDefaultsExtensions
             builder.Services.ConfigureOpenTelemetryMeterProvider(metrics => metrics.AddOtlpExporter());
             builder.Services.ConfigureOpenTelemetryTracerProvider(tracing => tracing.AddOtlpExporter());
         }
-
-        return builder;
     }
 }

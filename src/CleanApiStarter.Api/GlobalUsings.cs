@@ -7,7 +7,6 @@ global using System.Security.Claims;
 global using System.Text;
 global using System.Text.Encodings.Web;
 
-global using CleanApiStarter.Api;
 global using CleanApiStarter.Api.Common.Interfaces;
 global using CleanApiStarter.Api.Common.Models;
 global using CleanApiStarter.Api.Configuration;
@@ -36,6 +35,5 @@ global using Microsoft.EntityFrameworkCore;
 global using Microsoft.EntityFrameworkCore.Metadata.Builders;
 global using Microsoft.Extensions.Configuration;
 global using Microsoft.Extensions.DependencyInjection;
-global using Microsoft.Extensions.Logging;
 global using Microsoft.Extensions.Options;
 global using Microsoft.IdentityModel.Tokens;
