@@ -57,6 +57,6 @@
   <!-- Explicitly updated packages due to known issues -->
   <ItemGroup>
     <PackageVersion Include="MessagePack" Version="3.1.7" />
-    <PackageVersion Include="Microsoft.OpenApi" Version="2.7.5" />
+    <PackageVersion Include="Microsoft.OpenApi" Version="3.8.0" />
   </ItemGroup>
 </Project>
