@@ -28,7 +28,7 @@ jobs:
           global-json-file: global.json
 
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v4
+        uses: github/codeql-action/init@v4.37.3
         with:
           languages: csharp
           build-mode: manual
@@ -41,4 +41,4 @@ jobs:
         run: dotnet build CleanApiStarter.slnx --no-restore --configuration Release /nr:false -v:minimal
 
       - name: Analyze
-        uses: github/codeql-action/analyze@v4
+        uses: github/codeql-action/analyze@v4.37.3
