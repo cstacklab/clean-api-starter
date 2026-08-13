@@ -10,6 +10,7 @@
         <PackageReference Include="AutoFixture.Xunit3" PrivateAssets="all" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
         <PackageReference Include="Npgsql" />
+        <PackageReference Include="NSubstitute" VersionOverride="6.2.0" />
         <PackageReference Include="System.IdentityModel.Tokens.Jwt" />
         <PackageReference Include="Testcontainers.PostgreSql" />
         <PackageReference Include="xunit.v3.extensibility.core" />
