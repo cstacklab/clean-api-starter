@@ -43,4 +43,4 @@ jobs:
 
       - name: Test sample
         working-directory: artifacts/DemoProduct
-        run: dotnet test DemoProduct.slnx --no-build --configuration Release /nr:false -v:minimal
+        run: dotnet test --solution DemoProduct.slnx --no-build --configuration Release -v:minimal

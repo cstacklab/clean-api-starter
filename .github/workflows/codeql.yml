@@ -33,6 +33,7 @@ jobs:
           languages: csharp
           build-mode: manual
           queries: security-extended,security-and-quality
+          config-file: ./.github/codeql/codeql-config.yml
 
       - name: Restore
         run: dotnet restore CleanApiStarter.slnx

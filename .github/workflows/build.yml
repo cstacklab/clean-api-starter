@@ -30,4 +30,4 @@ jobs:
         run: dotnet build CleanApiStarter.slnx --no-restore --configuration Release /nr:false -v:minimal
 
       - name: Test
-        run: dotnet test CleanApiStarter.slnx --no-build --configuration Release /nr:false -v:minimal
+        run: dotnet test --solution CleanApiStarter.slnx --no-build --configuration Release -v:minimal
