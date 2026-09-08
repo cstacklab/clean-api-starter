@@ -27,6 +27,7 @@
     <!-- Explicitly updated packages due to known issues -->
     <ItemGroup>
         <PackageReference Include="Microsoft.OpenApi"/>
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" />
     </ItemGroup>
 
 </Project>
