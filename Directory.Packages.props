@@ -2,8 +2,8 @@
 <Project>
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-    <AspireVersion>13.6.3</AspireVersion>
-    <AspnetVersion>10.0.13</AspnetVersion>
+    <AspireVersion>13.6.4</AspireVersion>
+    <AspnetVersion>10.0.14</AspnetVersion>
     <EfcoreVersion>10.0.0</EfcoreVersion>
     <MicrosoftExtensionsVersion>10.0.9</MicrosoftExtensionsVersion>
     <MicrosoftExtensionsVersionHttp>10.11.0</MicrosoftExtensionsVersionHttp>
@@ -46,7 +46,7 @@
     <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.20.1" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.20.1" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.20.1" />
-    <PackageVersion Include="Scalar.AspNetCore" Version="2.18.2" />
+    <PackageVersion Include="Scalar.AspNetCore" Version="2.18.5" />
     <PackageVersion Include="Shouldly" Version="4.3.0" />
     <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="8.23.0" />
     <PackageVersion Include="Testcontainers.PostgreSql" Version="4.16.0" />
