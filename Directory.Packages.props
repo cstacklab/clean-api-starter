@@ -2,8 +2,8 @@
 <Project>
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-    <AspireVersion>13.6.3</AspireVersion>
-    <AspnetVersion>10.0.13</AspnetVersion>
+    <AspireVersion>13.6.4</AspireVersion>
+    <AspnetVersion>10.0.14</AspnetVersion>
     <EfcoreVersion>10.0.0</EfcoreVersion>
     <MicrosoftExtensionsVersion>10.0.9</MicrosoftExtensionsVersion>
     <MicrosoftExtensionsVersionHttp>10.11.0</MicrosoftExtensionsVersionHttp>
@@ -19,7 +19,7 @@
     <PackageVersion Include="coverlet.collector" Version="10.1.0" />
     <PackageVersion Include="FluentValidation" Version="12.2.0" />
     <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="12.2.0" />
-    <PackageVersion Include="Google.Apis.Auth" Version="1.77.0" />
+    <PackageVersion Include="Google.Apis.Auth" Version="1.78.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="$(AspnetVersion)" />
     <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="$(AspnetVersion)" />
     <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="$(AspnetVersion)" />
@@ -37,16 +37,16 @@
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.11.0" />
     <PackageVersion Include="NSubstitute" Version="5.3.0" />
     <PackageVersion Include="Npgsql" Version="10.0.3" />
-    <PackageVersion Include="NsDepCop" Version="3.2.0" />
+    <PackageVersion Include="NsDepCop" Version="3.3.0" />
     <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.3" />
     <PackageVersion Include="Npgsql.OpenTelemetry" Version="10.0.3" />
     <PackageVersion Include="OpenTelemetry" Version="1.20.1" />
     <PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.20.1" />
     <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.20.1" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.20.1" />
-    <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.20.1" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.20.2" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.20.1" />
-    <PackageVersion Include="Scalar.AspNetCore" Version="2.18.2" />
+    <PackageVersion Include="Scalar.AspNetCore" Version="2.19.0" />
     <PackageVersion Include="Shouldly" Version="4.3.0" />
     <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="8.23.0" />
     <PackageVersion Include="Testcontainers.PostgreSql" Version="4.16.0" />
